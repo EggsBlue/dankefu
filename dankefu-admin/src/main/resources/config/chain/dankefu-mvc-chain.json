@@ -2,6 +2,7 @@ var chain={
 	"default" : {
 		"ps" : [
 			  "cn.dankefu.base.processor.SettingsProcessor",
+			  "cn.dankefu.base.processor.LogTimeProcessor",
 			  "org.nutz.mvc.impl.processor.UpdateRequestAttributesProcessor",
 		      "org.nutz.mvc.impl.processor.EncodingProcessor",
 		      "org.nutz.mvc.impl.processor.ModuleProcessor",

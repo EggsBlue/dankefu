@@ -1,35 +1,42 @@
 package cn.dankefu.bean;
 
-import cn.wizzer.framework.base.model.BaseModel;
 import org.nutz.dao.entity.annotation.*;
 
-import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
- * Created by wizzer on 2016/6/21.
+ * 系统用户表
+ * @author 蛋蛋的忧伤
+ * @date 2018/5/10 0010 20:22
  */
-@Table("sys_user")
+@Table("dankefu_sys_user")
 @TableIndexes({@Index(name = "INDEX_SYS_USER_LOGINNAMAE", fields = {"loginname"}, unique = true)})
-public class Sys_user extends BaseModel implements Serializable {
+public class Sys_user extends BasePojo {
     private static final long serialVersionUID = 1L;
+
     @Column
     @Name
-    @Comment("ID")
+    @Comment("编号")
     @ColDefine(type = ColType.VARCHAR, width = 32)
     @Prev(els = {@EL("uuid()")})
     private String id;
 
     @Column
-    @Comment("用户名")
+    @Comment("账号")
     @ColDefine(type = ColType.VARCHAR, width = 120)
-    private String loginname;
+    private String loginName;
+
+    @Column
+    @ColDefine(type = ColType.VARCHAR, width = 32)
+    @Comment("单位编号")
+    private String unitId;
 
     @Column
     @Comment("密码")
     @ColDefine(type = ColType.VARCHAR, width = 100)
-    private String password;// transient 修饰符可让此字段不在对象里显示
+    private String password;
 
     @Column
     @Comment("密码盐")
@@ -39,19 +46,20 @@ public class Sys_user extends BaseModel implements Serializable {
     @Column
     @Comment("用户名")
     @ColDefine(type = ColType.VARCHAR, width = 100)
-    private String username;
+    private String userName;
 
     @Column
     @Comment("是否在线")
     @ColDefine(type = ColType.BOOLEAN)
-    private boolean isOnline;
+    private boolean online;
 
     @Column
     @Comment("是否禁用")
     @ColDefine(type = ColType.BOOLEAN)
-    private boolean disabled;
+    private boolean disable;
 
     @Column
+    @Comment("邮箱")
     @ColDefine(type = ColType.VARCHAR, width = 255)
     private String email;
 
@@ -61,12 +69,12 @@ public class Sys_user extends BaseModel implements Serializable {
     private String mobile;
 
     @Column
-    @Comment("登陆时间")
+    @Comment("最后登陆时间")
     @ColDefine(type = ColType.INT)
-    private Integer loginAt;
+    private Date loginAt;
 
     @Column
-    @Comment("登陆IP")
+    @Comment("最后登陆IP")
     @ColDefine(type = ColType.VARCHAR, width = 255)
     private String loginIp;
 
@@ -76,73 +84,20 @@ public class Sys_user extends BaseModel implements Serializable {
     private Integer loginCount;
 
     @Column
-    @Comment("常用菜单")
-    @ColDefine(type = ColType.VARCHAR, width = 255)
-    private String customMenu;
-
-    @Column
-    @Comment("皮肤样式")
-    @ColDefine(type = ColType.VARCHAR, width = 100)
-    private String loginTheme;
-
-    @Column
-    @Comment("微信登录unionid")
-    @ColDefine(type = ColType.VARCHAR, width = 100)
-    private String unionid;
-
-    @Column
     @Comment("用户头像img")
     @ColDefine(type = ColType.VARCHAR, width = 255)
     private String icon;
 
     @Column
-    @Comment("系统实名信息ID")
-    @ColDefine(type = ColType.VARCHAR, width = 32)
-    private String sys_real_name_id;
+    @Comment("最大服务人数")
+    @ColDefine(type = ColType.INT)
+    private int maxServiceCount;
 
-    @Column
-    private boolean loginSidebar;
 
-    @Column
-    private boolean loginBoxed;
-
-    @Column
-    private boolean loginScroll;
-
-    @Column
-    private boolean loginPjax;
-
-    @Column
-    @ColDefine(type = ColType.VARCHAR, width = 32)
-    private String unitid;
-
-    @One(field = "unitid")
-    private Sys_unit unit;
-
-    @One(field = "sys_real_name_id")
-    private Sys_real_name sysRealName;
-
-    @ManyMany(from = "userId", relation = "sys_user_role", to = "roleId")
+    @ManyMany(from = "userId", relation = "dankefu_sys_user_role", to = "roleId")
     private List<Sys_role> roles;
 
-    @ManyMany(from = "userId", relation = "sys_user_unit", to = "unitId")
-    protected List<Sys_unit> units;
-
     protected List<Sys_menu> menus;
-
-    protected List<Sys_menu> firstMenus;
-
-    protected Map<String, List<Sys_menu>> secondMenus;
-
-    private List<Sys_menu> customMenus;
-
-    private String companyName;
-
-    private String companyAddr;
-
-    private String companyContracts;
-
-    private String companyContractsPhone;
 
 
     public String getId() {
@@ -153,12 +108,12 @@ public class Sys_user extends BaseModel implements Serializable {
         this.id = id;
     }
 
-    public String getLoginname() {
-        return loginname;
+    public String getLoginName() {
+        return loginName;
     }
 
-    public void setLoginname(String loginname) {
-        this.loginname = loginname;
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
     }
 
     public String getPassword() {
@@ -177,28 +132,21 @@ public class Sys_user extends BaseModel implements Serializable {
         this.salt = salt;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public boolean isOnline() {
-        return isOnline;
-    }
-
-    public void setIsOnline(boolean isOnline) {
-        this.isOnline = isOnline;
-    }
 
     public boolean isDisabled() {
-        return disabled;
+        return disable;
     }
 
     public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+        this.disable = disabled;
     }
 
     public String getEmail() {
@@ -209,11 +157,19 @@ public class Sys_user extends BaseModel implements Serializable {
         this.email = email;
     }
 
-    public Integer getLoginAt() {
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public Date getLoginAt() {
         return loginAt;
     }
 
-    public void setLoginAt(Integer loginAt) {
+    public void setLoginAt(Date loginAt) {
         this.loginAt = loginAt;
     }
 
@@ -233,68 +189,12 @@ public class Sys_user extends BaseModel implements Serializable {
         this.loginCount = loginCount;
     }
 
-    public String getCustomMenu() {
-        return customMenu;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setCustomMenu(String customMenu) {
-        this.customMenu = customMenu;
-    }
-
-    public String getLoginTheme() {
-        return loginTheme;
-    }
-
-    public void setLoginTheme(String loginTheme) {
-        this.loginTheme = loginTheme;
-    }
-
-    public boolean isLoginSidebar() {
-        return loginSidebar;
-    }
-
-    public void setLoginSidebar(boolean loginSidebar) {
-        this.loginSidebar = loginSidebar;
-    }
-
-    public boolean isLoginBoxed() {
-        return loginBoxed;
-    }
-
-    public void setLoginBoxed(boolean loginBoxed) {
-        this.loginBoxed = loginBoxed;
-    }
-
-    public boolean isLoginScroll() {
-        return loginScroll;
-    }
-
-    public void setLoginScroll(boolean loginScroll) {
-        this.loginScroll = loginScroll;
-    }
-
-    public boolean isLoginPjax() {
-        return loginPjax;
-    }
-
-    public void setLoginPjax(boolean loginPjax) {
-        this.loginPjax = loginPjax;
-    }
-
-    public String getUnitid() {
-        return unitid;
-    }
-
-    public void setUnitid(String unitid) {
-        this.unitid = unitid;
-    }
-
-    public Sys_unit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(Sys_unit unit) {
-        this.unit = unit;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public List<Sys_role> getRoles() {
@@ -305,14 +205,6 @@ public class Sys_user extends BaseModel implements Serializable {
         this.roles = roles;
     }
 
-    public List<Sys_unit> getUnits() {
-        return units;
-    }
-
-    public void setUnits(List<Sys_unit> units) {
-        this.units = units;
-    }
-
     public List<Sys_menu> getMenus() {
         return menus;
     }
@@ -321,99 +213,65 @@ public class Sys_user extends BaseModel implements Serializable {
         this.menus = menus;
     }
 
-    public List<Sys_menu> getFirstMenus() {
-        return firstMenus;
+    public boolean isOnline() {
+        return online;
     }
 
-    public void setFirstMenus(List<Sys_menu> firstMenus) {
-        this.firstMenus = firstMenus;
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
-    public Map<String, List<Sys_menu>> getSecondMenus() {
-        return secondMenus;
+    public String getUnitId() {
+        return unitId;
     }
 
-    public void setSecondMenus(Map<String, List<Sys_menu>> secondMenus) {
-        this.secondMenus = secondMenus;
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
     }
 
-    public List<Sys_menu> getCustomMenus() {
-        return customMenus;
+    public boolean isDisable() {
+        return disable;
     }
 
-    public void setCustomMenus(List<Sys_menu> customMenus) {
-        this.customMenus = customMenus;
+    public void setDisable(boolean disable) {
+        this.disable = disable;
     }
 
-    public String getMobile() {
-        return mobile;
+    public int getMaxServiceCount() {
+        return maxServiceCount;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setMaxServiceCount(int maxServiceCount) {
+        this.maxServiceCount = maxServiceCount;
     }
 
-    public String getUnionid() {
-        return unionid;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sys_user sys_user = (Sys_user) o;
+        return online == sys_user.online &&
+                disable == sys_user.disable &&
+                maxServiceCount == sys_user.maxServiceCount &&
+                Objects.equals(id, sys_user.id) &&
+                Objects.equals(loginName, sys_user.loginName) &&
+                Objects.equals(unitId, sys_user.unitId) &&
+                Objects.equals(password, sys_user.password) &&
+                Objects.equals(salt, sys_user.salt) &&
+                Objects.equals(userName, sys_user.userName) &&
+                Objects.equals(email, sys_user.email) &&
+                Objects.equals(mobile, sys_user.mobile) &&
+                Objects.equals(loginAt, sys_user.loginAt) &&
+                Objects.equals(loginIp, sys_user.loginIp) &&
+                Objects.equals(loginCount, sys_user.loginCount) &&
+                Objects.equals(icon, sys_user.icon) &&
+                Objects.equals(roles, sys_user.roles) &&
+                Objects.equals(menus, sys_user.menus);
     }
 
-    public void setUnionid(String unionid) {
-        this.unionid = unionid;
-    }
+    @Override
+    public int hashCode() {
 
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public String getCompanyAddr() {
-        return companyAddr;
-    }
-
-    public void setCompanyAddr(String companyAddr) {
-        this.companyAddr = companyAddr;
-    }
-
-    public String getCompanyContracts() {
-        return companyContracts;
-    }
-
-    public void setCompanyContracts(String companyContracts) {
-        this.companyContracts = companyContracts;
-    }
-
-    public String getCompanyContractsPhone() {
-        return companyContractsPhone;
-    }
-
-    public void setCompanyContractsPhone(String companyContractsPhone) {
-        this.companyContractsPhone = companyContractsPhone;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getSys_real_name_id() {
-        return sys_real_name_id;
-    }
-
-    public void setSys_real_name_id(String sys_real_name_id) {
-        this.sys_real_name_id = sys_real_name_id;
-    }
-
-    public Sys_real_name getSysRealName() {
-        return sysRealName;
-    }
-
-    public void setSysRealName(Sys_real_name sysRealName) {
-        this.sysRealName = sysRealName;
+        return Objects.hash(id, loginName, unitId, password, salt, userName, online, disable, email, mobile, loginAt, loginIp, loginCount, icon, maxServiceCount, roles, menus);
     }
 }

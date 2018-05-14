@@ -1,18 +1,17 @@
 package cn.dankefu.bean;
 
-import cn.wizzer.framework.base.model.BaseModel;
-import org.nutz.dao.DB;
 import org.nutz.dao.entity.annotation.*;
 
-import java.io.Serializable;
-import java.util.List;
+import java.util.Objects;
 
 /**
- * Created by wizzer on 2016/6/21.
+ * 系统权限/菜单表
+ * @author 蛋蛋的忧伤
+ * @date 2018/5/10  20:28
  */
-@Table("sys_menu")
-@TableIndexes({@Index(name = "INDEX_SYS_MENU_PATH", fields = {"path"}, unique = true), @Index(name = "INDEX_SYS_MENU_PREM", fields = {"permission"}, unique = true)})
-public class Sys_menu extends BaseModel implements Serializable {
+@Table("dankefu_sys_menu")
+@TableIndexes({@Index(name = "INDEX_SYS_MENU_PERMISSION", fields = {"permission"}, unique = true)})
+public class Sys_menu extends BasePojo {
     private static final long serialVersionUID = 1L;
     @Column
     @Name
@@ -22,54 +21,9 @@ public class Sys_menu extends BaseModel implements Serializable {
     private String id;
 
     @Column
-    @Comment("父级ID")
-    @ColDefine(type = ColType.VARCHAR, width = 32)
-    private String parentId;
-
-    @Column
-    @Comment("树路径")
-    @ColDefine(type = ColType.VARCHAR, width = 100)
-    private String path;
-
-    @Column
-    @Comment("菜单名称")
+    @Comment("菜单/权限名称")
     @ColDefine(type = ColType.VARCHAR, width = 100)
     private String name;
-
-    @Column
-    @Comment("菜单别名")
-    @ColDefine(type = ColType.VARCHAR, width = 100)
-    private String aliasName;
-
-    @Column
-    @Comment("资源类型")
-    @ColDefine(type = ColType.VARCHAR, width = 10)
-    private String type;
-
-    @Column
-    @Comment("菜单链接")
-    @ColDefine(type = ColType.VARCHAR, width = 255)
-    private String href;
-
-    @Column
-    @Comment("打开方式")
-    @ColDefine(type = ColType.VARCHAR, width = 50)
-    private String target;
-
-    @Column
-    @Comment("菜单图标")
-    @ColDefine(type = ColType.VARCHAR, width = 50)
-    private String icon;
-
-    @Column
-    @Comment("是否显示")
-    @ColDefine(type = ColType.BOOLEAN)
-    private boolean isShow;
-
-    @Column
-    @Comment("是否禁用")
-    @ColDefine(type = ColType.BOOLEAN)
-    private boolean disabled;
 
     @Column
     @Comment("权限标识")
@@ -77,23 +31,26 @@ public class Sys_menu extends BaseModel implements Serializable {
     private String permission;
 
     @Column
-    @Comment("菜单介绍")
+    @Comment("说明")
     @ColDefine(type = ColType.VARCHAR, width = 255)
     private String note;
 
-    @Column
-    @Comment("排序字段")
-    @Prev({
-            @SQL(db= DB.MYSQL,value = "SELECT IFNULL(MAX(location),0)+1 FROM sys_menu"),
-            @SQL(db= DB.ORACLE,value = "SELECT COALESCE(MAX(location),0)+1 FROM sys_menu")
-    })
-    private Integer location;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sys_menu sys_menu = (Sys_menu) o;
+        return Objects.equals(id, sys_menu.id) &&
+                Objects.equals(name, sys_menu.name) &&
+                Objects.equals(permission, sys_menu.permission) &&
+                Objects.equals(note, sys_menu.note);
+    }
 
-    @Column
-    @Comment("有子节点")
-    private boolean hasChildren;
+    @Override
+    public int hashCode() {
 
-    private List<Sys_menu> buttons;
+        return Objects.hash(id, name, permission, note);
+    }
 
     public String getId() {
         return id;
@@ -103,84 +60,12 @@ public class Sys_menu extends BaseModel implements Serializable {
         this.id = id;
     }
 
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAliasName() {
-        return aliasName;
-    }
-
-    public void setAliasName(String aliasName) {
-        this.aliasName = aliasName;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getHref() {
-        return href;
-    }
-
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public boolean isShow() {
-        return isShow;
-    }
-
-    public void setIsShow(boolean isShow) {
-        this.isShow = isShow;
-    }
-
-    public boolean isDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
     }
 
     public String getPermission() {
@@ -197,29 +82,5 @@ public class Sys_menu extends BaseModel implements Serializable {
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public Integer getLocation() {
-        return location;
-    }
-
-    public void setLocation(Integer location) {
-        this.location = location;
-    }
-
-    public boolean isHasChildren() {
-        return hasChildren;
-    }
-
-    public void setHasChildren(boolean hasChildren) {
-        this.hasChildren = hasChildren;
-    }
-
-    public List<Sys_menu> getButtons() {
-        return buttons;
-    }
-
-    public void setButtons(List<Sys_menu> buttons) {
-        this.buttons = buttons;
     }
 }

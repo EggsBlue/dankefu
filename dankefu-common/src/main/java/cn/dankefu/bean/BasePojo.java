@@ -7,7 +7,8 @@ import org.nutz.lang.random.R;
 
 import java.io.Serializable;
 import java.util.Date;
-/*
+/**
+ * 基础pojo
  * author: 蛋蛋的忧伤
  * date: 2018/5/1  21:21
  */
@@ -17,15 +18,22 @@ public class BasePojo implements Serializable {
     
     @Prev(els=@EL("$me.now()"))
     @Column("ct")
+    @Comment("创建时间")
     protected Date createTime;
+
     @Prev(els=@EL("$me.now()"))
     @Column("ut")
+    @Comment("最后一次修改时间")
     protected Date updateTime;
+
     @Column("at")
+    @Comment("操作人")
     protected String at;
+
     @Column("delFlag")
     @Prev(els=@EL("$me.flag()"))
     @ColDefine(type = ColType.BOOLEAN)
+    @Comment("是否删除")
     protected boolean delFlag;
 
 

@@ -1,11 +1,7 @@
 package cn.dankefu.bean;
 
 import cn.dankefu.utils.ShiroUtil;
-import cn.wizzer.framework.base.model.BaseModel;
-import cn.wizzer.framework.util.StringUtil;
 import org.nutz.dao.entity.annotation.*;
-import org.nutz.lang.Lang;
-import org.nutz.mvc.Mvcs;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,16 +10,17 @@ import static org.nutz.lang.Lang.getIP;
 import static org.nutz.mvc.Mvcs.getReq;
 
 
-/*
+/**
  *  系统日志表
  * @author 蛋蛋的忧伤
  * @date 2018/5/9  21:41
  */
-@Table("sys_log_${month}")
-public class Sys_log extends BasePojo implements Serializable {
+@Table("dankefu_sys_log_${month}")
+public class Sys_log extends BasePojo {
     private static final long serialVersionUID = 1L;
     @Column
     @Id
+    @Comment("编号")
     private long id;
 
     @Column

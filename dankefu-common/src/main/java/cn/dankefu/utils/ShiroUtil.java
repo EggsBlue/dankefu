@@ -7,9 +7,8 @@ import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.Mvcs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -305,7 +304,7 @@ public class ShiroUtil {
                 return Strings.sNull(request.getSession(true).getAttribute("uid"));
             }
         } catch (Exception e) {
-            log.error(e);
+            Logs.get().error(e);
         }
 
         return "-";
@@ -318,7 +317,7 @@ public class ShiroUtil {
                 return Strings.sNull(request.getSession(true).getAttribute("username"));
             }
         } catch (Exception e) {
-            log.error(e);
+            Logs.get().error(e);
         }
 
         return "-";
