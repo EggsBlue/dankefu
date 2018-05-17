@@ -1,5 +1,8 @@
 package cn.dankefu.web;
 
-public class Handler {
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 
+public class Handler {
+    public Log log = Logs.get();
 }

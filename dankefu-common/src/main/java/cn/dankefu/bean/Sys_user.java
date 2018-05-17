@@ -12,7 +12,7 @@ import java.util.Objects;
  * @date 2018/5/10 0010 20:22
  */
 @Table("dankefu_sys_user")
-@TableIndexes({@Index(name = "INDEX_SYS_USER_LOGINNAMAE", fields = {"loginname"}, unique = true)})
+@TableIndexes({@Index(name = "INDEX_SYS_USER_LOGINNAMAE", fields = {"loginName"}, unique = true)})
 public class Sys_user extends BasePojo {
     private static final long serialVersionUID = 1L;
 

@@ -52,7 +52,6 @@ public class Chat_leavemsg extends BasePojo{
     @Comment("邮箱")
     private String email;
 
-
     @Column
     @ColDefine(type = ColType.VARCHAR, width = 500)
     @Comment("留言内容")

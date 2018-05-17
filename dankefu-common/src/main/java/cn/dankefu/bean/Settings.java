@@ -29,12 +29,12 @@ public class Settings extends BasePojo{
     @Column
     @Comment("键")
     @ColDefine(type = ColType.VARCHAR, width = 120)
-    private String key;
+    private String sKey;
 
     @Column
     @Comment("值")
     @ColDefine(type = ColType.VARCHAR, width = 255)
-    private String val;
+    private String sVal;
 
 
     public String getId() {
@@ -53,20 +53,20 @@ public class Settings extends BasePojo{
         this.unitId = unitId;
     }
 
-    public String getKey() {
-        return key;
+    public String getsKey() {
+        return sKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setsKey(String sKey) {
+        this.sKey = sKey;
     }
 
-    public String getVal() {
-        return val;
+    public String getsVal() {
+        return sVal;
     }
 
-    public void setVal(String val) {
-        this.val = val;
+    public void setsVal(String sVal) {
+        this.sVal = sVal;
     }
 
     @Override
@@ -76,14 +76,14 @@ public class Settings extends BasePojo{
         Settings settings = (Settings) o;
         return Objects.equals(id, settings.id) &&
                 Objects.equals(unitId, settings.unitId) &&
-                Objects.equals(key, settings.key) &&
-                Objects.equals(val, settings.val);
+                Objects.equals(sKey, settings.sKey) &&
+                Objects.equals(sVal, settings.sVal);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, unitId, key, val);
+        return Objects.hash(id, unitId, sKey, sVal);
     }
 }
 

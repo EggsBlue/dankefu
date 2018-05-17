@@ -1,6 +1,8 @@
 package cn.dankefu;
 
 import org.nutz.boot.NbApp;
+import org.nutz.dao.Dao;
+import org.nutz.dao.util.Daos;
 import org.nutz.integration.jedis.JedisAgent;
 import org.nutz.integration.shiro.ShiroSessionProvider;
 import org.nutz.ioc.Ioc;
@@ -24,21 +26,27 @@ import org.nutz.mvc.annotation.*;
 @SessionBy(ShiroSessionProvider.class)
 public class MainLauncher {
     private static final Log log = Logs.get();
-    @Inject("refer:$ioc")
-    private Ioc ioc;
     @Inject
-    private PropertiesProxy conf;
-    @Inject
-    private JedisAgent jedisAgent;
+    private Dao dao;
 
     public static void main(String[] args) throws Exception {
         new NbApp().setArgs(args).run();
     }
 
     public void init() {
+        try {
+            //创建表结构
+            Daos.createTablesInPackage(dao, "cn.dankefu", false);
+            if (log.isDebugEnabled()) {
+                //更新表字段
+                Daos.migration(dao, "cn.dankefu", true, false);
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
+
     }
 
     public void depose() {
-
     }
 }

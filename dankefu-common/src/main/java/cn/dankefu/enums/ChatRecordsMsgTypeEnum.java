@@ -1,20 +1,20 @@
 package cn.dankefu.enums;
 
 /**
- * 证件类型枚举
- * @author 蛋蛋的忧伤
- * @date 2018/5/16 0016 20:10
+ * 消息类型
+ * author: 蛋蛋的忧伤
+ * date: 2018/5/17 0017 19:39
  */
-public enum CardTypeEnum {
-    IDENTITYCARD ("identityCard","身份证"),
-    OFFICERCERTIFICATE("officerCertificate","军官证书"),
-    PASSPORT("passport","护照");
-
+public enum  ChatRecordsMsgTypeEnum {
+    TEXT("text","文本消息"),
+    IMAGE("image","图片消息"),
+    VIDEO("video","视频消息"),
+    voice("voice","音频消息");
 
     String type;
     String desc;
 
-    CardTypeEnum(String type, String desc){
+    ChatRecordsMsgTypeEnum(String type, String desc){
         this.type = type;
         this.desc= desc;
     }
