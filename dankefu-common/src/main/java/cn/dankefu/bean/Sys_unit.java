@@ -45,25 +45,10 @@ public class Sys_unit extends BasePojo{
     @ColDefine(type = ColType.VARCHAR, width = 11)
     private String phone;
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Sys_unit sys_unit = (Sys_unit) o;
-        return Objects.equals(id, sys_unit.id) &&
-                Objects.equals(parentId, sys_unit.parentId) &&
-                Objects.equals(name, sys_unit.name) &&
-                Objects.equals(logo, sys_unit.logo) &&
-                Objects.equals(email, sys_unit.email) &&
-                Objects.equals(phone, sys_unit.phone);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, parentId, name, logo, email, phone);
-    }
+    @Column
+    @Comment("说明")
+    @ColDefine(type = ColType.VARCHAR, width = 255)
+    private String note;
 
     public String getId() {
         return id;
@@ -111,5 +96,33 @@ public class Sys_unit extends BasePojo{
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sys_unit sys_unit = (Sys_unit) o;
+        return Objects.equals(id, sys_unit.id) &&
+                Objects.equals(parentId, sys_unit.parentId) &&
+                Objects.equals(name, sys_unit.name) &&
+                Objects.equals(logo, sys_unit.logo) &&
+                Objects.equals(email, sys_unit.email) &&
+                Objects.equals(phone, sys_unit.phone) &&
+                Objects.equals(note, sys_unit.note);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, parentId, name, logo, email, phone, note);
     }
 }

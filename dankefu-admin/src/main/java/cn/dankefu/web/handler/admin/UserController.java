@@ -15,9 +15,5 @@ import org.nutz.mvc.annotation.Ok;
 @Fail("http:500")
 public class UserController extends Handler {
 
-    @At("/login")
-    public void login(){
-
-    }
 
 }

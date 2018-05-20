@@ -44,7 +44,6 @@ public class MainLauncher {
         } catch (Exception e) {
             log.error(e);
         }
-
     }
 
     public void depose() {

@@ -93,9 +93,12 @@ public class Sys_user extends BasePojo {
     @ColDefine(type = ColType.INT)
     private int maxServiceCount;
 
-
     @ManyMany(from = "userId", relation = "dankefu_sys_user_role", to = "roleId")
     private List<Sys_role> roles;
+
+    @One(field = "unitId")
+    private Sys_unit unit;
+
 
     protected List<Sys_menu> menus;
 
@@ -266,12 +269,21 @@ public class Sys_user extends BasePojo {
                 Objects.equals(loginCount, sys_user.loginCount) &&
                 Objects.equals(icon, sys_user.icon) &&
                 Objects.equals(roles, sys_user.roles) &&
+                Objects.equals(unit, sys_user.unit) &&
                 Objects.equals(menus, sys_user.menus);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, loginName, unitId, password, salt, userName, online, disable, email, mobile, loginAt, loginIp, loginCount, icon, maxServiceCount, roles, menus);
+        return Objects.hash(id, loginName, unitId, password, salt, userName, online, disable, email, mobile, loginAt, loginIp, loginCount, icon, maxServiceCount, roles, unit, menus);
+    }
+
+    public Sys_unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Sys_unit unit) {
+        this.unit = unit;
     }
 }

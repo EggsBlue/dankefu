@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:required="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 注册</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="${base}/assets/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="${base}/assets/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="${base}/assets/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="${base}/assets/css/animate.css" rel="stylesheet">
+    <link href="${base}/assets/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="${base}/assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen   animated fadeInDown">
+        <div>
+            <div>
+                <h1 class="logo-name">蛋</h1>
+            </div>
+            <h3>欢迎注册 蛋客服</h3>
+            <p>创建一个蛋客服新账户</p>
+            <form class="m-t" id="regForm" role="form" action="login.html">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="userName" id="userName" placeholder="请输入用户名"  >
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="请输入密码" >
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="请再次输入密码" >
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" name="email" id="email"  placeholder="请输入邮箱地址" >
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="compayName" id="compayName"  placeholder="请输入公司名称" >
+                </div>
+
+                <div class="form-group text-left">
+                    <div class="checkbox i-checks">
+                        <label class="no-padding">
+                            <input type="checkbox"><i></i> 我同意注册协议</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">注 册</button>
+
+                <p class="text-muted text-center"><small>已经有账户了？</small><a href="login.html">点此登录</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="${base}/assets/js/jquery.min.js?v=2.1.4"></script>
+    <script src="${base}/assets/js/bootstrap.min.js?v=3.3.6"></script>
+    <!-- iCheck -->
+    <script src="${base}/assets/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="${base}/assets/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="${base}/assets/js/plugins/validate/messages_zh.min.js"></script>
+    <script src="${base}/assets/js/plugins/toastr/toastr.min.js"></script>
+    <script src="${base}/assets/js/Toast.js"></script>
+    <script>
+        var isChecked = false;
+        $.validator.setDefaults({
+            submitHandler: function() {
+                if(!isChecked){
+                    Toast.warning("您还没有同意注册协议");
+                    return;
+                }
+                $.post('${base}/prev/doReg',$('#regForm').serialize(),function(data){
+                    if(data.code == 0){
+                        location.href='${base}/prev/login';
+                    }else{
+                        Toast.error(data.msg);
+                    }
+                });
+            }
+        });
+
+
+
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('[type=checkbox]').on('ifChanged', function(event){
+                if($(this).is(':checked')){//就是这么简单
+                    isChecked = true;
+                }else{
+                    isChecked = false;
+                }
+            });
+
+            $().ready(function() {
+                $("#regForm").validate();
+            });
+
+            $("#regForm").validate({
+                rules: {
+                    userName: "required",
+                    password:{
+                        required: true,
+                        minlength: 6
+                    },
+                    confirm_password: {
+                        required: true,
+                        equalTo: "#password",
+                        minlength: 6
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+
+                    compayName: {
+                        required: true,
+                        minlength: 2
+                    }
+                },
+                messages: {
+                    userName: "请输入用户名",
+                    password: {
+                        required: "请填写确认密码",
+                        minlength: "密码长度太短了"
+                    },
+                    confirm_password: {
+                        required: "请填写确认密码",
+                        equalTo: "两次密码不一致",
+                        minlength: "密码长度太短了"
+                    },
+                    email: {
+                        required: "请填写邮箱",
+                        email: "请填写一个正确的邮箱"
+                    },
+                    compayName: {
+                        required: "请输入公司名称或简称",
+                        minlength: "公司名称最低两个字"
+                    }
+                }
+            })
+        });
+    </script>
+
+</body>
+</html>

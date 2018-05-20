@@ -1,6 +1,8 @@
 package cn.dankefu.web.handler.admin;
 
 import cn.dankefu.web.Handler;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Fail;
@@ -13,13 +15,24 @@ import org.nutz.mvc.annotation.Ok;
  */
 @IocBean
 @Fail("http:500")
-@At({"/","/home"})
+@At({"/","/home","/admin/home"})
 public class HomeController extends Handler {
 
     @At("")
     @Ok("re")
     public String home(){
-        return "beetl:/login.html";
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated()){
+            return "redirect:/prev/login";
+        }
+        return "beetl:/admin/system/index.html";
     }
 
+
+
+    @At("/logout")
+    @Ok(">>:/prev/login")
+    public void logout(){
+        SecurityUtils.getSubject().logout();
+    }
 }
