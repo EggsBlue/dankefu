@@ -53,7 +53,7 @@ public class Test1 extends Assert {
     }
 
     public static NbApp createNbApp() {
-        NbApp nb = new NbApp().setMainClass(MainLauncher.class).setPrintProcDoc(false);
+        NbApp nb = new NbApp().setMainClass(DankefuAdminMainLauncher.class).setPrintProcDoc(false);
         nb.getAppContext().setMainPackage("cn.dankefu");
         return nb;
     }

@@ -35,6 +35,12 @@ public class Knowledge_type extends BasePojo{
     @ColDefine(type = ColType.VARCHAR, width = 32)
     private String parentId;
 
+    @Column
+    @Comment("是否有子类型")
+    @ColDefine(type = ColType.BOOLEAN)
+    private boolean hasChildren;
+
+
     public String getId() {
         return id;
     }
@@ -67,12 +73,21 @@ public class Knowledge_type extends BasePojo{
         this.parentId = parentId;
     }
 
+    public boolean isHasChildren() {
+        return hasChildren;
+    }
+
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Knowledge_type that = (Knowledge_type) o;
-        return Objects.equals(id, that.id) &&
+        return hasChildren == that.hasChildren &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(unitId, that.unitId) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(parentId, that.parentId);
@@ -81,6 +96,6 @@ public class Knowledge_type extends BasePojo{
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, unitId, name, parentId);
+        return Objects.hash(id, unitId, name, parentId, hasChildren);
     }
 }

@@ -93,6 +93,12 @@ public class Sys_user extends BasePojo {
     @ColDefine(type = ColType.INT)
     private int maxServiceCount;
 
+    @Column
+    @Comment("是否是客服人员")
+    @ColDefine(type = ColType.BOOLEAN)
+    private boolean isServiced;
+
+
     @ManyMany(from = "userId", relation = "dankefu_sys_user_role", to = "roleId")
     private List<Sys_role> roles;
 
@@ -285,5 +291,13 @@ public class Sys_user extends BasePojo {
 
     public void setUnit(Sys_unit unit) {
         this.unit = unit;
+    }
+
+    public boolean isServiced() {
+        return isServiced;
+    }
+
+    public void setServiced(boolean serviced) {
+        isServiced = serviced;
     }
 }

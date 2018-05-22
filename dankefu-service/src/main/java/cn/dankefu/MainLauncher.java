@@ -8,11 +8,13 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
+import org.nutz.mvc.annotation.ChainBy;
 import org.nutz.mvc.annotation.Encoding;
 import org.nutz.mvc.annotation.Modules;
 import org.nutz.mvc.annotation.SessionBy;
 
-/*
+/**
+ * NB启动类
  * author: 蛋蛋的忧伤
  * date: 2018/5/8  20:18
  */
@@ -20,6 +22,7 @@ import org.nutz.mvc.annotation.SessionBy;
 @Modules(packages = "cn.dankefu")
 @Encoding(input = "UTF-8", output = "UTF-8")
 @SessionBy(ShiroSessionProvider.class)
+@ChainBy(args = "config/chain/dankefu-mvc-chain.json")
 public class MainLauncher {
     private static final Log log = Logs.get();
     @Inject("refer:$ioc")

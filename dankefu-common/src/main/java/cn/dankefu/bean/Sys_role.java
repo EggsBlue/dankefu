@@ -139,4 +139,6 @@ public class Sys_role extends BasePojo {
 
         return Objects.hash(id, name, unitId, code, disabled, note, menus, users);
     }
+
+
 }

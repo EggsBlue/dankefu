@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录->蛋客服</title>
+    <meta name="keywords" content="nutz,nutzboot,java,nutz社区,java,tio,客服系统,蛋蛋">
+    <meta name="description" content="蛋客服,做最实用的客服系统">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="${base}/assets/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="${base}/assets/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="${base}/assets/css/animate.css" rel="stylesheet">
+    <link href="${base}/assets/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="${base}/assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="${base}/assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <script>if (window.top !== window.self) {
+        window.top.location = window.location;
+    }</script>
+</head>
+
+<body class="gray-bg">
+
+<div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+        <div>
+            <h1 class="logo-name">蛋</h1>
+        </div>
+        <h3>欢迎使用蛋客服-服务台</h3>
+        <form class="m-t" role="form" action="index.html" onsubmit="return false;">
+            <div class="form-group">
+                <input type="text" class="form-control" id="userName" placeholder="用户名" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" placeholder="密码" required="">
+            </div>
+            <button type="submit" onclick="login()" class="btn btn-red block full-width m-b">登 录</button>
+
+            <p class="text-muted text-center"><a href="login.html#">
+                <small>忘记密码了？</small>
+            </a>
+            </p>
+
+        </form>
+    </div>
+</div>
+
+<!-- 全局js -->
+<script src="${base}/assets/js/jquery.min.js?v=2.1.4"></script>
+<script src="${base}/assets/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="${base}/assets/js/plugins/toastr/toastr.min.js"></script>
+
+<script src="${base}/assets/js/Toast.js"></script>
+</body>
+<script>
+    function login() {
+        var userName = $('#userName').val();
+        if (userName == '') {
+            return;
+        }
+        var password = $('#password').val();
+        console.log(password);
+        if (password == '') {
+            return;
+        }
+        $.post('${base}/prev/doLogin', {userName: userName, password: password}, function (data) {
+            console.log(data);
+            if (data.code == 0) {
+                location.href = '${base}/home';
+            } else {
+                Toast.error(data.msg);
+            }
+        });
+    }
+
+
+</script>
+
+</html>

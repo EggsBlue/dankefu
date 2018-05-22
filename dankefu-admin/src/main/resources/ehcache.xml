@@ -2,7 +2,7 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false"
     monitoring="autodetect" dynamicConfig="true" name="dankefu">
-    <diskStore path="ehcache/dankefu"/>
+    <diskStore path="ehcache/dankefu-admin"/>
     <cache name="shiro-dankefu-activeSessionCache"
            maxElementsInMemory="1000"
            overflowToDisk="true"

@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="renderer" content="webkit">
-    <title> 蛋客服</title>
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <!--[if lt IE 9]>
-    <meta http-equiv="refresh" content="0;ie.html" />
-    <![endif]-->
-    <link rel="shortcut icon" href="favicon.ico"> <link href="${base}/assets/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
-    <link href="${base}/assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
-    <link href="${base}/assets/css/animate.css" rel="stylesheet">
-    <link href="${base}/assets/css/style.css?v=4.1.0" rel="stylesheet">
-</head>
+<%
+layout("/layout/unify.html",{title:'蛋客服'}){
+%>
 
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
     <div id="wrapper">
@@ -79,7 +64,7 @@
                         <span class="ng-scope">资源中心</span>
                     </li>
                     <li>
-                        <a class="J_menuItem" href="/error/undone.html"><i class="fa fa-book"></i> <span class="nav-label">知识库</span></a>
+                        <a class="J_menuItem" href="${base}/knowledge"><i class="fa fa-book"></i> <span class="nav-label">知识库</span></a>
                     </li>
                     <li>
                         <a class="J_menuItem" href="/error/undone.html"><i class="fa fa-folder-o"></i> <span class="nav-label">素材库</span></a>
@@ -143,21 +128,6 @@
         </div>
         <!--右侧部分结束-->
     </div>
-
-    <!-- 全局js -->
-    <script src="${base}/assets/js/jquery.min.js?v=2.1.4"></script>
-    <script src="${base}/assets/js/bootstrap.min.js?v=3.3.6"></script>
-    <script src="${base}/assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="${base}/assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-    <script src="${base}/assets/js/plugins/layer/layer.min.js"></script>
-
-    <!-- 自定义js -->
-    <script src="${base}/assets/js/hAdmin.js?v=4.1.0"></script>
-    <script type="text/javascript" src="${base}/assets/js/index.js"></script>
-
-    <!-- 第三方插件 -->
-    <script src="${base}/assets/js/plugins/pace/pace.min.js"></script>
-
 </body>
-
 </html>
+<% } %>

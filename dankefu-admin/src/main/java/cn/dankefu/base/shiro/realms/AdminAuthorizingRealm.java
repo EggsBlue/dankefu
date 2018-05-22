@@ -1,4 +1,5 @@
 package cn.dankefu.base.shiro.realms;
+import cn.dankefu.bean.Sys_role;
 import cn.dankefu.bean.Sys_unit;
 import cn.dankefu.bean.Sys_user;
 import cn.dankefu.service.SysRoleService;
@@ -8,11 +9,13 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.nutz.castor.Castors;
 import org.nutz.dao.Cnd;
 import org.nutz.integration.jedis.RedisService;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -79,18 +82,18 @@ public class AdminAuthorizingRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         Object object = principals.getPrimaryPrincipal();
         if (object.getClass().isAssignableFrom(Sys_user.class)) {
-//            Sys_user user = Castors.me().castTo(object, Sys_user.class);
-//            if (!Lang.isEmpty(user) && !user.isDisabled()) {
-//                SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-//                info.addRoles(userService.getRoleCodeList(user));
-//                for (Sys_role role : user.getRoles()) {
-//                    if (!role.isDisabled())
-//                        info.addStringPermissions(roleService.getPermissionNameList(role));
-//                }
-//                return info;
-//            } else {
-//                return null;
-//            }
+            Sys_user user = Castors.me().castTo(object, Sys_user.class);
+            if (!Lang.isEmpty(user) && !user.isDisabled()) {
+                SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+                info.addRoles(userService.getRoles(user));
+                for (Sys_role role : user.getRoles()) {
+                    if (!role.isDisabled())
+                        info.addStringPermissions(roleService.getPermissions(role));
+                }
+                return info;
+            } else {
+                return null;
+            }
         }
         return null;
     }
