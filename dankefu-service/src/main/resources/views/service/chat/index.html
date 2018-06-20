@@ -1,0 +1,103 @@
+<%
+var unit = @shiro.getPrincipalProperty('unit');
+layout("/layout/unify.html",{title:unit.name}){
+%>
+<script type="text/javascript" src="${base}/assets/js/reconnecting-websocket.js"></script>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox chat-view">
+
+                    <div class="ibox-title">
+                        <small class="pull-right text-muted">最新消息：2015-02-02 18:39:23</small> 聊天窗口
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-9 ">
+                                <div class="chat-discussion">
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											H+ 是个好框架
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar message-avatar-right" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-right">
+                                            <a class="message-author" href="#"> 颜文字君</a>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											H+ 是个好框架
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> 颜文字君</a>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											H+ 是个好框架
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> 颜文字君</a>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											H+ 是个好框架
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> 颜文字君</a>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											H+ 是个好框架
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a4.jpg" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> 林依晨Ariel </a>
+                                            <span class="message-date">  2015-02-02 11:12:36 </span>
+                                            <span class="message-content">
+											jQuery表单验证插件 - 让表单验证变得更容易
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="chat-message-form">
+                                    <div class="form-group">
+                                        <textarea class="form-control message-input" name="message" placeholder="输入消息内容，按回车键发送"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+
+
+<% } %>

@@ -1,5 +1,6 @@
 <%
-layout("/layout/unify.html",{title:'蛋客服'}){
+var unit = @shiro.getPrincipalProperty('unit');
+layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
 %>
 
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
@@ -16,12 +17,12 @@ layout("/layout/unify.html",{title:'蛋客服'}){
                                 <span class="clear">
                                     <span class="block m-t-xs" style="font-size:20px;">
                                         <i class="fa "></i>
-                                        <strong class="font-bold">蛋客服</strong>
+                                        <strong class="font-bold">${unit.name!'蛋客服'}</strong>
                                     </span>
                                 </span>
                             </a>
                         </div>
-                        <div class="logo-element">蛋客服
+                        <div class="logo-element">${unit.name!'蛋客服'}
                         </div>
                     </li>
                     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
@@ -91,7 +92,7 @@ layout("/layout/unify.html",{title:'蛋客服'}){
                         <a class="J_menuItem" href="/error/undone.html"><i class="fa fa-female"></i> <span class="nav-label">角色中心</span></a>
                     </li>
                     <li>
-                        <a class="J_menuItem" href="/error/undone.html"><i class="fa fa-wrench"></i> <span class="nav-label">企业设置</span></a>
+                        <a class="J_menuItem" href="${base}/compay"><i class="fa fa-wrench"></i> <span class="nav-label">企业设置</span></a>
                     </li>
                 </ul>
             </div>
@@ -110,7 +111,7 @@ layout("/layout/unify.html",{title:'蛋客服'}){
                     </div>
                     <ul class="nav navbar-top-links navbar-right">
                         <li >
-                            <a class=" count-info"  href="http://nutz.cn">
+                            <a class=" count-info"  href="http://localhost:9422/home">
                                 <i class="fa fa-building"></i> 工作台 <span class="label label-warning"></span>
                             </a>
                         </li>

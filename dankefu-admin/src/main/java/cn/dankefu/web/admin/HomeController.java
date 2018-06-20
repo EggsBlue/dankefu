@@ -25,7 +25,7 @@ public class HomeController extends Handler {
         if (!subject.isAuthenticated()){
             return "redirect:/prev/login";
         }
-        return "beetl:/admin/system/index.html";
+        return "beetl:/admin/system/home.html";
     }
 
 

@@ -1,0 +1,207 @@
+<%
+var unit = @shiro.getPrincipalProperty('unit');
+layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
+%>
+<style>
+    .wrapper-content {
+        width: 100%;
+        height: 100%;
+    }
+
+    .row {
+        width: 100%;
+        height: 100%;
+    }
+
+    #tab-1 {
+        border: 1px solid black;
+        height: 100%;
+    }
+
+    #left {
+        position: absolute;
+        left: 5%;
+        /*display: inline-block;*/
+        /*float:left;*/
+        /*border: 1px solid red;*/
+        width: 20%;
+    }
+
+    #filePicker {
+        width: 100%;
+        /*float:right;*/
+        /*border: 1px solid blue;*/
+    }
+
+    .tab-content {
+        height: 100%;
+    }
+
+    #right {
+        position: absolute;
+        right: 5%;
+        display: inline-block;;
+        width: 65%;
+        border: 2px solid black;
+    }
+
+    .panel-body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .panel-body, #left, #right {
+        height: 100%;
+    }
+
+    #left img {
+        width: 150px;
+        height: 150px;
+        display: block;
+        margin: 0 auto;
+        /*border: 3px solid #cccccc;*/
+    }
+
+    #left #filePicker {
+        /*text-align: center;*/
+        /*font-size: 18px;*/
+        /*font-family: 微软雅黑;*/
+        /*font-weight: 600px;*/
+        /*background-color: ;*/
+        margin: 0 auto;
+        /*padding: 0;*/
+        /*margin: 0;*/
+        width: 50%;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeIn">
+    <div class="row" style="width: 100%; height: 100%;">
+        <div class="col-sm-12" style="height: 100%;">
+            <div class="tabs-container" style="height: 100%;">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> 企业信息</a>
+                    </li>
+                    <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">第二个选项卡</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            <div id="left">
+                                <div id="uploader-demo">
+                                    <!--用来存放item-->
+                                    <div id="fileList" class="uploader-list">
+                                        <div id="WU_FILE_2" class="file-item thumbnail"><img
+                                                src="${base}/assets/img/webuploader.png">
+                                            <div class="info"></div>
+                                        </div>
+                                    </div>
+                                    <div id="filePicker">选择图片</div>
+                                </div>
+
+                            </div>
+                            <div id="right">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <strong>移动设备优先</strong>
+                            <p>在 Bootstrap 2 中，我们对框架中的某些关键部分增加了对移动设备友好的样式。而在 Bootstrap 3
+                                中，我们重写了整个框架，使其一开始就是对移动设备友好的。这次不是简单的增加一些可选的针对移动设备的样式，而是直接融合进了框架的内核中。也就是说，Bootstrap
+                                是移动设备优先的。针对移动设备的样式融合进了框架的每个角落，而不是增加一个额外的文件。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var uploader = WebUploader.create({
+
+        // swf文件路径
+        swf: '${base}/assets/js/plugins/webuploader/Uploader.swf',
+
+        // 文件接收服务端。
+        server: '${base}/upload/image',
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#filePicker',
+
+        // 只允许选择图片文件。
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        },
+        fileVal: 'file',
+        // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+        resize: false
+    });
+
+    // 当有文件添加进来的时候
+    uploader.on('fileQueued', function (file) {
+        // var $li = $(
+        //     '<div id="' + file.id + '" class="file-item thumbnail">' +
+        //     '<img>' +
+        //     '<div class="info">' + file.name + '</div>' +
+        //     '</div>'
+        //     ),
+        //     $img = $li.find('img');
+
+        // $('#fileList').html('');
+        // $list为容器jQuery实例
+        // $('#fileList').append($li);
+
+        // 创建缩略图
+        // 如果为非图片文件，可以不用调用此方法。
+        // thumbnailWidth x thumbnailHeight 为 100 x 100
+        uploader.makeThumb(file, function (error, src) {
+            if (error) {
+                Toast.error("创建预览失败");
+                // $img.replaceWith('<span>不能预览</span>');
+                return;
+            }
+            console.log(src);
+            console.log( $('#WU_FILE_2'));
+            $('#WU_FILE_2 img').attr("src",src);
+        }, 150, 150);
+        uploader.upload();
+    });
+
+
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader.on('uploadSuccess', function (file, response) {
+        Toast.success("上传成功");
+        // console.log(file);
+        console.log(response);
+        // $( '#'+file.id ).addClass('upload-state-done');
+    });
+
+    // 文件上传失败，显示上传出错。
+    uploader.on('uploadError', function (file) {
+        var $li = $('#' + file.id),
+            $error = $li.find('div.error');
+
+        // 避免重复创建
+        if (!$error.length) {
+            $error = $('<div class="error"></div>').appendTo($li);
+        }
+
+        $error.text('上传失败');
+    });
+
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader.on('uploadComplete', function (file) {
+        $('#' + file.id).find('.progress').remove();
+    });
+
+</script>
+</html>
+<% } %>

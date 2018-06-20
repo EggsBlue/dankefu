@@ -1,5 +1,6 @@
 package cn.dankefu;
 
+import cn.dankefu.websocket.WebSocketServer;
 import org.nutz.boot.NbApp;
 import org.nutz.integration.shiro.ShiroSessionProvider;
 import org.nutz.ioc.Ioc;
@@ -23,16 +24,21 @@ import org.nutz.mvc.annotation.SessionBy;
 @Encoding(input = "UTF-8", output = "UTF-8")
 @SessionBy(ShiroSessionProvider.class)
 @ChainBy(args = "config/chain/dankefu-mvc-chain.json")
-public class MainLauncher {
+public class DankefuServiceMainLauncher {
     private static final Log log = Logs.get();
+
     @Inject("refer:$ioc")
     private Ioc ioc;
+
     @Inject
     private PropertiesProxy conf;
 
+    @Inject
+    private WebSocketServer webSocketServer;
+
 
     public static void main(String[] args) throws Exception {
-        new NbApp().setArgs(args).setPrintProcDoc(true).run();
+        new NbApp().setArgs(args).run();
     }
 
     public void init() {

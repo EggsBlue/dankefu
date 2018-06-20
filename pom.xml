@@ -19,6 +19,7 @@
         <mysql-connector-java.version>5.1.46</mysql-connector-java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dankefu.version>1.0-SNAPSHOT</dankefu.version>
+        <tio-version>3.0.2.v20180612-RELEASE</tio-version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -33,6 +34,16 @@
                 <groupId>cn.dankefu</groupId>
                 <artifactId>dankefu-common</artifactId>
                 <version>${dankefu.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.t-io</groupId>
+                <artifactId>tio-websocket-server</artifactId>
+                <version>${tio-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.t-io</groupId>
+                <artifactId>tio-core</artifactId>
+                <version>${tio-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -63,8 +74,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.nutz</groupId>
-            <artifactId>nutz</artifactId>
+            <groupId>org.t-io</groupId>
+            <artifactId>tio-websocket-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.t-io</groupId>
+            <artifactId>tio-core</artifactId>
         </dependency>
     </dependencies>
 </project>

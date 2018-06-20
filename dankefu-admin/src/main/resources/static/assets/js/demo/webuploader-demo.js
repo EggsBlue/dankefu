@@ -66,7 +66,7 @@ jQuery(function() {
             id: '#filePicker',
             label: '点击选择图片'
         },
-        dnd: '#uploader .queueList',
+        dnd: '#uploader .filePicker',
         paste: document.body,
 
         accept: {
