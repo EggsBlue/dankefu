@@ -1,0 +1,359 @@
+<%
+var unit = @shiro.getPrincipalProperty('unit');
+layout("/layout/unify.html",{title:unit.name}){
+%>
+<style>
+    .chat-discussion {
+        /*border:1px solid red;*/
+        height: 600px;
+    }
+    .chat-discussion .chat-message{
+        /*border:1px solid blue;*/
+        /*position: relative;;*/
+
+    }
+
+    .chat-discussion .chat-message .message{
+        display: inline-block;
+        margin-left: 0px;
+        margin-top: 10px;
+        padding-top: 0;
+        /*height: 50px;*/
+        width:85%;
+    }
+    .chat-discussion .chat-message .message-avatar{
+        margin-top: -18px;
+    }
+    .chat-discussion .chat-message .message .message-date{
+        float:right;
+    }
+
+    .chat-discussion .chat-message .message-right2{
+        text-align: right;
+        margin-left:50px;
+        /*padding-right:0;*/
+    }
+    .chat-discussion .chat-message .message-right2 .message-date{
+        float: left;
+
+    }
+
+    .chat-discussion .chat-message .avatar-right{
+        margin-right:4px;
+        margin-top: 8px;
+        float: right;
+    }
+
+    /* ===  chat-item-list ===*/
+
+    #chat-list{
+        overflow-y: auto;
+        height:600px;
+    }
+    #chat-list .chat-item{
+        border-bottom: 1px solid black;
+
+    }
+    #chat-list .chat-item  img{
+        width: 60px;
+        height:60px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+
+    #chat-list .chat-item .chat-item-name{
+        font-size: 14px;
+        line-height: 50px;
+        display: inline-block;
+        /*background-color: #aac6e3;*/
+        height:50px;
+        margin-left:30px;
+        margin-top:15px;
+        padding-left: 10px;
+        padding-right: 10px;
+        /*border:1px solid*/
+        /*padding-top: 15px;*/
+        width:150px;
+
+    }
+
+
+    #chat-list .chat-item .chat-item-status{
+        font-size: 18px;
+        line-height: 32px;
+        display: inline-block;
+        margin-left: 40px;
+    }
+
+    .online{
+        color:#00ff00;
+    }
+    .offline{
+        color: #cccccc;
+    }
+</style>
+<script type="text/javascript" src="${base}/assets/js/reconnecting-websocket.js"></script>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox chat-view">
+
+                    <div class="ibox-title">
+                        <small class="pull-right text-muted">最新消息：2015-02-02 18:39:23</small> 聊天窗口
+                    </div>
+
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-9 ">
+                                <div class="chat-discussion">
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。蛋客服为了做最实用的客服系统。蛋客服为了做最实用的客服系统。蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-left">
+                                            <a class="message-author message-avatar-left" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message">
+                                        <img class="message-avatar avatar-right" src="${base}/assets/img/a1.jpg" alt="">
+                                        <div class="message message-right2">
+                                            <a class="message-author" href="#"> 颜文字君</a><br>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											蛋客服为了做最实用的客服系统。蛋客服为了做最实用的客服系统。蛋客服为了做最实用的客服系统。蛋客服为了做最实用的客服系统。
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!--<div class="chat-message">-->
+                                        <!--<img class="message-avatar message-avatar-right" src="${base}/assets/img/a1.jpg" alt="">-->
+                                        <!--<div class="message message-right">-->
+                                            <!--<a class="message-author" href="#"> 颜文字君</a>-->
+                                            <!--<span class="message-date"> 2015-02-02 18:39:23 </span>-->
+                                            <!--<span class="message-content">-->
+											<!--H+ 是个好框架-->
+                                            <!--</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="chat-message">-->
+                                        <!--<img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">-->
+                                        <!--<div class="message">-->
+                                            <!--<a class="message-author" href="#"> 颜文字君</a>-->
+                                            <!--<span class="message-date"> 2015-02-02 18:39:23 </span>-->
+                                            <!--<span class="message-content">-->
+											<!--H+ 是个好框架-->
+                                            <!--</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="chat-message">-->
+                                        <!--<img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">-->
+                                        <!--<div class="message">-->
+                                            <!--<a class="message-author" href="#"> 颜文字君</a>-->
+                                            <!--<span class="message-date"> 2015-02-02 18:39:23 </span>-->
+                                            <!--<span class="message-content">-->
+											<!--H+ 是个好框架-->
+                                            <!--</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="chat-message">-->
+                                        <!--<img class="message-avatar" src="${base}/assets/img/a1.jpg" alt="">-->
+                                        <!--<div class="message">-->
+                                            <!--<a class="message-author" href="#"> 颜文字君</a>-->
+                                            <!--<span class="message-date"> 2015-02-02 18:39:23 </span>-->
+                                            <!--<span class="message-content">-->
+											<!--H+ 是个好框架-->
+                                            <!--</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="chat-message">-->
+                                        <!--<img class="message-avatar" src="${base}/assets/img/a4.jpg" alt="">-->
+                                        <!--<div class="message">-->
+                                            <!--<a class="message-author" href="#"> 林依晨Ariel </a>-->
+                                            <!--<span class="message-date">  2015-02-02 11:12:36 </span>-->
+                                            <!--<span class="message-content">-->
+											<!--jQuery表单验证插件 - 让表单验证变得更容易-->
+                                            <!--</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                               <div id="chat-list">
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                                   <div class="chat-item">
+                                       <img src="/assets/img/a1.jpg" alt="暂无图片">
+                                       <div class="chat-item-name">wendal</div>
+                                       <span class="chat-item-status online">在线</span>
+                                   </div>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="chat-message-form">
+                                    <div class="form-group">
+                                        <textarea class="form-control message-input" name="message" placeholder="输入消息内容，按回车键发送"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    // alert(1);
+</script>
+
+<% } %>
