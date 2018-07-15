@@ -1,7 +1,7 @@
 package cn.dankefu.utils;
 
 import cn.dankefu.packet.SocketMsg;
-import org.tio.utils.json.Json;
+import org.nutz.json.Json;
 import org.tio.websocket.common.WsResponse;
 
 /**
@@ -16,8 +16,8 @@ public class SocketMsgUtils {
      * @param body
      * @return
      */
-    public static WsResponse madeWsResponse(byte action, Object body){
-        return WsResponse.fromText(Json.toJson(new SocketMsg(action,body)),"utf-8");
+    public static WsResponse makeWsResponse(byte action, Object body){
+        return WsResponse.fromText(Json.toJson(new SocketMsg(action, body)),"utf-8");
     }
 
 }

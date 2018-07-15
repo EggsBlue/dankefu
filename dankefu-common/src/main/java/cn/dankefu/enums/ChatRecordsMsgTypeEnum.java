@@ -1,5 +1,7 @@
 package cn.dankefu.enums;
 
+import org.nutz.lang.Strings;
+
 /**
  * 消息类型
  * author: 蛋蛋的忧伤
@@ -33,5 +35,18 @@ public enum  ChatRecordsMsgTypeEnum {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public static ChatRecordsMsgTypeEnum valueOf2(String type){
+        if(Strings.isBlank(type)){
+            return null;
+        }
+        ChatRecordsMsgTypeEnum[] values = values();
+        for (ChatRecordsMsgTypeEnum typeEnum : values){
+            if(typeEnum.getType().equalsIgnoreCase(type)){
+                return typeEnum;
+            }
+        }
+        return null;
     }
 }

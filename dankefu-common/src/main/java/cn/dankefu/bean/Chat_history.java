@@ -37,7 +37,7 @@ public class Chat_history extends BasePojo{
 
     @Column
     @ColDefine(type = ColType.VARCHAR, width = 50)
-    @Comment("来放人名字")
+    @Comment("来访人名字")
     private String name;
 
     @Column
@@ -45,9 +45,8 @@ public class Chat_history extends BasePojo{
     @Comment("来源:ClientSourceEnum")
     private String source;
 
-
     @Column
-    @ColDefine(type = ColType.VARCHAR,width = 100)
+    @ColDefine(type = ColType.VARCHAR,width = 255)
     @Comment("浏览器代理内容")
     private String userAgent;
 
@@ -59,56 +58,68 @@ public class Chat_history extends BasePojo{
     @Column
     @ColDefine(type = ColType.BOOLEAN)
     @Comment("是否转接到了人工")
+    @Default(value = "false")
     private boolean isPersonService;
 
     @Column
     @ColDefine(type = ColType.BOOLEAN)
     @Comment("是否客服全忙")
+    @Default(value = "false")
     private boolean isBusy;
 
     @Column
     @ColDefine(type = ColType.BOOLEAN)
     @Comment("是否为休息时间")
+    @Default(value = "false")
     private boolean isRestTime;
 
 
     @Column
     @ColDefine(type = ColType.BOOLEAN)
     @Comment("是否评级")
+    @Default(value = "false")
     private boolean isAppraise;
 
 
     @Column
     @ColDefine(type = ColType.BOOLEAN)
     @Comment("是否转接客服")
+    @Default(value = "false")
     private boolean isRedirect;
 
 
     @Column
     @ColDefine(type = ColType.BOOLEAN)
     @Comment("转接状态")
+    @Default(value = "false")
     private boolean redirectStatus;
 
     @Column
     @ColDefine(type = ColType.VARCHAR,width = 32)
     @Comment("转接目标人编号")
-    private boolean redirectUserId;
+    private String redirectUserId;
 
     @Column
     @ColDefine(type = ColType.VARCHAR,width = 32)
     @Comment("转接人编号")
-    private boolean formUserId;
+    private String formUserId;
 
     @Column
     @ColDefine(type = ColType.VARCHAR,width = 32)
     @Comment("转接来源会话编号")
-    private boolean fromChatId;
+    private String fromChatId;
 
 
     @Column
     @ColDefine(type = ColType.VARCHAR,width = 32)
     @Comment("转接来源会话编号")
-    private boolean fromChatHistoryId;
+    private String fromChatHistoryId;
+
+    @Column
+    @ColDefine(type = ColType.BOOLEAN,width = 32)
+    @Comment("是否无客服在线")
+    @Default(value = "false")
+    private boolean isNoone;
 
     public String getId() {
         return id;
@@ -222,66 +233,44 @@ public class Chat_history extends BasePojo{
         this.redirectStatus = redirectStatus;
     }
 
-    public boolean isRedirectUserId() {
+
+    public String getRedirectUserId() {
         return redirectUserId;
     }
 
-    public void setRedirectUserId(boolean redirectUserId) {
+    public void setRedirectUserId(String redirectUserId) {
         this.redirectUserId = redirectUserId;
     }
 
-    public boolean isFormUserId() {
+    public String getFormUserId() {
         return formUserId;
     }
 
-    public void setFormUserId(boolean formUserId) {
+    public void setFormUserId(String formUserId) {
         this.formUserId = formUserId;
     }
 
-    public boolean isFromChatId() {
-        return fromChatId;
-    }
-
-    public void setFromChatId(boolean fromChatId) {
-        this.fromChatId = fromChatId;
-    }
-
-    public boolean isFromChatHistoryId() {
+    public String getFromChatHistoryId() {
         return fromChatHistoryId;
     }
 
-    public void setFromChatHistoryId(boolean fromChatHistoryId) {
+    public void setFromChatHistoryId(String fromChatHistoryId) {
         this.fromChatHistoryId = fromChatHistoryId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Chat_history that = (Chat_history) o;
-        return isPersonService == that.isPersonService &&
-                isBusy == that.isBusy &&
-                isRestTime == that.isRestTime &&
-                isAppraise == that.isAppraise &&
-                isRedirect == that.isRedirect &&
-                redirectStatus == that.redirectStatus &&
-                redirectUserId == that.redirectUserId &&
-                formUserId == that.formUserId &&
-                fromChatId == that.fromChatId &&
-                fromChatHistoryId == that.fromChatHistoryId &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(unitId, that.unitId) &&
-                Objects.equals(chatId, that.chatId) &&
-                Objects.equals(sysUserId, that.sysUserId) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(source, that.source) &&
-                Objects.equals(userAgent, that.userAgent) &&
-                Objects.equals(endTime, that.endTime);
+    public String getFromChatId() {
+        return fromChatId;
     }
 
-    @Override
-    public int hashCode() {
+    public void setFromChatId(String fromChatId) {
+        this.fromChatId = fromChatId;
+    }
 
-        return Objects.hash(id, unitId, chatId, sysUserId, name, source, userAgent, endTime, isPersonService, isBusy, isRestTime, isAppraise, isRedirect, redirectStatus, redirectUserId, formUserId, fromChatId, fromChatHistoryId);
+    public boolean isNoone() {
+        return isNoone;
+    }
+
+    public void setNoone(boolean noone) {
+        isNoone = noone;
     }
 }

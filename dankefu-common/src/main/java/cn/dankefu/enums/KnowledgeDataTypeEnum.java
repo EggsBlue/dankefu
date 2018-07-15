@@ -1,5 +1,7 @@
 package cn.dankefu.enums;
 
+import org.nutz.lang.Strings;
+
 /**
  * 知识库数据类型
  * @author 蛋蛋的忧伤
@@ -31,5 +33,18 @@ public enum KnowledgeDataTypeEnum {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public static KnowledgeDataTypeEnum valueOf2(String type){
+        if(Strings.isBlank(type)){
+            return null;
+        }
+        KnowledgeDataTypeEnum[] values = values();
+        for (KnowledgeDataTypeEnum typeEnum : values){
+            if(typeEnum.getType().equalsIgnoreCase(type)){
+                return typeEnum;
+            }
+        }
+        return null;
     }
 }

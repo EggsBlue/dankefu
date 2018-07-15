@@ -1,5 +1,7 @@
 package cn.dankefu.enums;
 
+import org.nutz.lang.Strings;
+
 /**
  * 资源类型
  * author: 蛋蛋的忧伤
@@ -17,6 +19,19 @@ public enum ResourcesTypeEnum {
     ResourcesTypeEnum(String type, String desc){
         this.type = type;
         this.desc= desc;
+    }
+
+    public static ResourcesTypeEnum valueOf2(String type){
+        if(Strings.isBlank(type)){
+            return null;
+        }
+        ResourcesTypeEnum[] values = values();
+        for (ResourcesTypeEnum typeEnum : values){
+            if(typeEnum.getType().equalsIgnoreCase(type)){
+                return typeEnum;
+            }
+        }
+        return null;
     }
 
     public String getType() {

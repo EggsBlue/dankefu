@@ -1,5 +1,7 @@
 package cn.dankefu.enums;
 
+import org.nutz.lang.Strings;
+
 /**
  * 证件类型枚举
  * @author 蛋蛋的忧伤
@@ -17,6 +19,20 @@ public enum CardTypeEnum {
     CardTypeEnum(String type, String desc){
         this.type = type;
         this.desc= desc;
+    }
+
+
+    public static CardTypeEnum valueOf2(String type){
+        if(Strings.isBlank(type)){
+            return null;
+        }
+        CardTypeEnum[] values = values();
+        for (CardTypeEnum typeEnum : values){
+            if(typeEnum.getType().equalsIgnoreCase(type)){
+                return typeEnum;
+            }
+        }
+        return null;
     }
 
     public String getType() {

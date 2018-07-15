@@ -30,7 +30,6 @@ public class Customer extends BasePojo{
     @Comment("会话编号")
     private String chatId;
 
-
     @Column
     @ColDefine(type = ColType.VARCHAR, width = 50)
     @Comment("客户姓名")

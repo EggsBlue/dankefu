@@ -108,6 +108,8 @@ public class Sys_user extends BasePojo {
 
     protected List<Sys_menu> menus;
 
+    private int now_service_count;
+
 
     public String getId() {
         return id;
@@ -299,5 +301,13 @@ public class Sys_user extends BasePojo {
 
     public void setServiced(boolean serviced) {
         isServiced = serviced;
+    }
+
+    public int getNow_service_count() {
+        return now_service_count;
+    }
+
+    public void setNow_service_count(int now_service_count) {
+        this.now_service_count = now_service_count;
     }
 }

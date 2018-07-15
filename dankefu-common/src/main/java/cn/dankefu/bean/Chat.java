@@ -62,6 +62,12 @@ public class Chat extends BasePojo{
     @Comment("区域，根据ip获取的位置")
     private String region;
 
+    @Column
+    @ColDefine(type = ColType.VARCHAR, width = 50)
+    @Comment("session id")
+    private String sid;
+
+
     public String getId() {
         return id;
     }
@@ -134,6 +140,14 @@ public class Chat extends BasePojo{
         this.region = region;
     }
 
+    public String getSid() {
+        return sid;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -149,6 +163,8 @@ public class Chat extends BasePojo{
                 Objects.equals(endTime, chat.endTime) &&
                 Objects.equals(region, chat.region);
     }
+
+
 
     @Override
     public int hashCode() {

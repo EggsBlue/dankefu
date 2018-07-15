@@ -274,7 +274,7 @@
     console.log('${@conf.get("websocket.ip")}');
     $(function(){
         //初始化websocket连接
-        var ws = new ReconnectingWebSocket('ws://${@conf.get("websocket.ip")}:${@conf.get("websocket.port")}?aaa=naa',null, {debug: true, reconnectInterval: 3000});
+        var ws = new ReconnectingWebSocket('ws://${@conf.get("websocket.ip")}:${@conf.get("websocket.port")}?guest_id=${guest_id!}',null, {debug: true, reconnectInterval: 3000});
 
         ws.onopen = function(event){
             console.log("ws is open");

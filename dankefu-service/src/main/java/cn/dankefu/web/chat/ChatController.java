@@ -18,7 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 public class ChatController extends Handler {
 
     @At("")
-    @Ok("beetl:/service/chat/index.html")
+    @Ok("beetl:/service/chat/index3.html")
     public void home(HttpServletRequest request){
+
+
+
     }
 }

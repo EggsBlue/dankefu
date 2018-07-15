@@ -99,6 +99,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<Sys_user> implements Sys
     @Override
     public Result register(String userName, String password, String email,String compayName) {
 
+
+        Sys_user dbUser = this.fetch(Cnd.where("loginname", "=", userName));
+        if (!Lang.isEmpty(dbUser)) {
+            return Result.ERROR("用户名已存在");
+        }
+
+
         Sys_unit unit = new Sys_unit();
         unit.setEmail("");
         unit.setLogo("");
@@ -106,12 +113,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<Sys_user> implements Sys
         unit.setNote(compayName);
         unit.setPhone("");
         sysUnitService.insert(unit);
-
-
-        Sys_user dbUser = this.fetch(Cnd.where("loginname", "=", userName));
-        if (!Lang.isEmpty(dbUser)) {
-            return Result.ERROR("用户名已存在");
-        }
 
         //初始角色
         List<Sys_role> roles = new ArrayList<>();
@@ -128,6 +129,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<Sys_user> implements Sys
         user.setEmail(Strings.sBlank(email));
         user.setUnitId(unit.getId());
         user.setRoles(roles);
+        user.setMaxServiceCount(20); //默认10个最大有效服务数
         user = this.insert(user);
 
         this.insertRelation(user, "roles");

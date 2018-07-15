@@ -1,5 +1,7 @@
 package cn.dankefu.enums;
 
+import org.nutz.lang.Strings;
+
 /**
  * 客户来源
  * author: 蛋蛋的忧伤
@@ -15,6 +17,19 @@ public enum ClientSourceEnum {
     ClientSourceEnum(String source, String desc){
         this.source = source;
         this.desc= desc;
+    }
+
+    public static ClientSourceEnum valueOf2(String type){
+        if(Strings.isBlank(type)){
+            return null;
+        }
+        ClientSourceEnum[] values = values();
+        for (ClientSourceEnum typeEnum : values){
+            if(typeEnum.getSource().equalsIgnoreCase(type)){
+                return typeEnum;
+            }
+        }
+        return null;
     }
 
     public String getSource() {

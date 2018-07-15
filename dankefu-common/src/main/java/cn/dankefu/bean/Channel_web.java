@@ -32,7 +32,7 @@ public class Channel_web extends BasePojo{
 
     @Column
     @ColDefine(type = ColType.VARCHAR, width = 5)
-    @Comment("WEB渠道类型:ChannelWebTypeEnum")
+    @Comment("WEB渠道类型:ClientSourceEnum")
     private String type;
 
     @Column
@@ -154,6 +154,11 @@ public class Channel_web extends BasePojo{
     @ColDefine(type = ColType.BOOLEAN)
     @Comment("是否启用机器人")
     private boolean isRobot;
+
+
+
+    @One(field = "workTimeId")
+    private Channel_worktime channel_worktime;
 
     public String getId() {
         return id;
@@ -377,6 +382,15 @@ public class Channel_web extends BasePojo{
 
     public void setRobot(boolean robot) {
         isRobot = robot;
+    }
+
+
+    public Channel_worktime getChannel_worktime() {
+        return channel_worktime;
+    }
+
+    public void setChannel_worktime(Channel_worktime channel_worktime) {
+        this.channel_worktime = channel_worktime;
     }
 
     @Override

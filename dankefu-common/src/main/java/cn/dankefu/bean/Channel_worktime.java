@@ -195,4 +195,6 @@ public class Channel_worktime extends BasePojo{
 
         return Objects.hash(id, unitId, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday, startTime, endTime);
     }
+
+
 }

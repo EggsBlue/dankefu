@@ -1,5 +1,7 @@
 package cn.dankefu.enums;
 
+import org.nutz.lang.Strings;
+
 /**
  * WEB接入类型
  * author: 蛋蛋的忧伤
@@ -32,5 +34,19 @@ public enum  ChannelWebTypeEnum {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+
+    public static ChannelWebTypeEnum valueOf2(String type){
+        if(Strings.isBlank(type)){
+            return null;
+        }
+        ChannelWebTypeEnum[] values = values();
+        for (ChannelWebTypeEnum typeEnum : values){
+            if(typeEnum.getType().equalsIgnoreCase(type)){
+                return typeEnum;
+            }
+        }
+        return null;
     }
 }

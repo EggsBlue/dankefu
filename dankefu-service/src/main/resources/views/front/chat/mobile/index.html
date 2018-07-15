@@ -1,0 +1,425 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <title>在线客服</title>
+    <style>
+        body {
+            /* border:1px solid black; */
+            height: 100vh;
+            font-size: 12px;
+        }
+
+        #appim {
+            width: 100%;
+            height: 100%;
+            /* display: flex; */
+            /* border:1px solid red; */
+        }
+
+
+
+        .message-warp {
+            /* border: 2px solid red; */
+            font-size: .40625rem;
+            clear:both;
+        }
+
+        .message-warp .date-time {
+            text-align: center;
+            color: #b2c2cc;
+            margin-top: .3125rem;
+            clear: both;
+            /* border: 1px solid black; */
+        }
+
+        .message-warp .agent-message {
+            display: block;
+            margin-bottom: .625rem;
+            margin-left: .375rem;
+            position: relative;
+            margin-top: .3125rem;
+
+            float: left;
+        }
+
+        .message-warp .agent-message .head-img {
+            opacity: 0.9;
+            /*background: #07c5ba;*/
+            width: 1.125rem;
+            height: 1.125rem;
+            border-radius: 1.125rem;
+            position: absolute;
+            top: 0px;
+        }
+
+        .message-warp .agent-message .head-img img {
+            display: inline;
+            width: 1.125rem;
+            height: 1.125rem;
+        }
+
+        .message-warp .agent-message .chat-msg-cont {
+            padding: 0 1.5625rem;
+            padding-right: 3.8625rem;
+            /* float: left; */
+        }
+
+        .chat-msg-text {
+            background: #f5f8fa;
+            border: 0.5px solid #c8cfdc;
+        }
+
+        .chat-msg-text {
+            display: inline-block;
+            margin: 0;
+            position: relative;
+            padding: .25rem .475rem;
+            border-radius: .15625rem;
+            color: #545c69;
+        }
+
+        .message-warp .user-message {
+            margin-right: 12px;
+            color: #fff;
+            /* border: 2px solid blue; */
+            margin-bottom: .625rem;
+            position: relative;
+            margin-top: .3125rem;
+            display: block;
+            float: right;
+        }
+
+        .message-warp .user-message .head-img {
+            right: 0;
+            /* border: 1px solid black; */
+            opacity: 0.9;
+            background: #07c5ba;
+            width: 1.125rem;
+            height: 1.125rem;
+            border-radius: 1.125rem;
+            position: absolute;
+            top: 0px;
+        }
+
+        .message-warp .user-message .head-img img {
+            width: 1.125rem;
+            height: 1.125rem;
+            display: inline;
+        }
+
+        .message-warp .user-message .chat-msg-cont {
+            padding: 0 1.5625rem;
+            /* padding-right: 3.8625rem; */
+        }
+
+        #chatContent {
+            width: 100%;
+            /* border: 3px solid yellow; */
+            outline: none;
+            scroll-behavior: smooth;
+            overflow-y: auto;
+            display: block;
+            flex: 1;
+            overflow-y:scroll;
+            margin-bottom: 70px;
+        }
+
+        *{
+            box-sizing: border-box;
+        }
+        footer{
+            width: 100%;
+            /* border:1px solid red; */
+            display: block;
+            outline: none;
+            float: left;
+            /* position: absolute; */
+            position:fixed;
+            bottom: 0;
+            left: 0;
+            background-color: #eaedf3;
+
+        }
+        footer .more{
+            /*background-image: url(${base}/assets/images/加.png);*/
+            line-height: 1;
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+        }
+        footer .warp{
+            position: relative;
+            height: 2.5625rem;
+            border-top: 0.5px solid #c8cfdc;
+            margin:0;
+        }
+
+        footer .warp #send{
+            position: absolute;
+            right:8px;
+            background: #07c5ba;
+            top:.15625rem;
+            font-size: 1.40625rem;
+            height: 2.125rem;
+            line-height: 1.125rem;
+            color: #fff;
+            border-radius: .15625rem;
+            text-decoration:none;
+            padding:8px 15px;
+        }
+
+        footer .warp .textarea{
+            position: absolute;
+            top: 4px;
+            /* right:25%; */
+            width: 75%;
+        }
+        footer .warp .textarea input{
+            height: 2.125rem;
+            padding: .25rem .25rem;
+            width: 100%;
+            border:0.5px solid #c8cfda;
+        }
+        footer #dankefu-Copyright{
+            text-align: center;
+            line-height: 5px;
+            font-size: 16px;
+            color:#9ba8ba;
+            border-top: 0.5px solid #c8cfdc;
+            padding-top: 8px;
+            margin-bottom: 10px;
+        }
+        .msg-last{
+            margin-bottom: 130px;
+        }
+    </style>
+</head>
+
+
+
+<body>
+    <div class="chatWrap" id="appim">
+        <div class="warp" id="chatContent">
+            <!--<div class="message-warp">-->
+                <!--<div class="date-time">05-27 14:24</div>-->
+                <!--<div class="agent-message">-->
+                    <!--<div class="head-img">-->
+                        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="chat-msg-cont">-->
+                        <!--<div class="chat-msg-text">-->
+                            <!--客服【蛋蛋】为您服务！-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="message-warp">-->
+                <!--<div class="date-time">2018-08</div>-->
+                <!--<div class="user-message">-->
+                    <!--<div class="head-img">-->
+                        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="chat-msg-cont">-->
+                        <!--<div class="chat-msg-text">-->
+                            <!--你好，请问有什么可以帮助您的？-->
+                            <!--<br> **回复0可以转人工哦**-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="message-warp">-->
+                <!--<div class="date-time">05-27 14:24</div>-->
+                <!--<div class="agent-message">-->
+                    <!--<div class="head-img">-->
+                        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="chat-msg-cont">-->
+                        <!--<div class="chat-msg-text">-->
+                            <!--你好，请问有什么可以帮助您的？-->
+                            <!--<br> **回复0可以转人工哦**-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+
+        </div>
+        <footer>
+            <div class="warp">
+                <i class="more"></i>
+                <div class="textarea">
+                    <input type="text" id="msgIn" placeholder="发送新消息">
+                </div>
+                <a  id="send">发送</a>
+            </div>
+            <div id="dankefu-Copyright">
+                <i></i>
+                <span>由蛋客服提供技术支持</span>
+            </div>
+        </footer>
+    </div>
+</body>
+<script type="text/javascript" src="${base}/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/assets/js/plugins/layui/layui.all.js"></script>
+<script type="text/javascript" src="${base}/assets/js/reconnecting-websocket.js"></script>
+<script type="text/javascript" src="${base}/assets/js/websocket/dankefu-types.js"></script>
+<script type="text/javascript" src="${base}/assets/js/websocket/dankefu-tpls.js"></script>
+<script type="text/javascript" src="${base}/assets/js/websocket/dankefu.js"></script>
+
+
+<script id="waiting" type="text/html">
+    <div class="message-warp">
+        <div class="date-time">{{d.time}}</div>
+        <div class="agent-message">
+            <div class="head-img">
+                <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
+            </div>
+            <div class="chat-msg-cont">
+                <div class="chat-msg-text">
+                    当前客服繁忙，正在为您排队中，您前面还有{{d.waitingCount}}个人
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="join" type="text/html">
+    <div class="message-warp">
+        <div class="date-time">{{d.time}}</div>
+        <div class="agent-message">
+            <div class="head-img">
+                <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
+            </div>
+            <div class="chat-msg-cont">
+                <div class="chat-msg-text">
+                   客服【{{d.servicer.userName}}】为您服务！
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script>
+    // console.log('${@conf.get("websocket.port")}');
+    // console.log('${@conf.get("websocket.ip")}');
+    var ws;
+    var guest_id = '${guest_id!}';
+    var laytpl;
+    var start_time;
+    var end_time;
+    $(function(){
+        start_time= new Date().getTime();
+        layui.use('laytpl', function(){
+            laytpl = layui.laytpl;
+        });
+
+        //初始化websocket连接
+        ws = new ReconnectingWebSocket('ws://${@conf.get("websocket.ip")}:${@conf.get("websocket.port")}?type=web_mobile&guest_id='+guest_id,null, {debug: true, reconnectInterval: 3000});
+
+        ws.onopen = function(event){
+            console.log("ws is open");
+            reqService();
+
+            end_time= new Date().getTime();
+            console.log("init done: "+(end_time-start_time)+" ms");
+        };
+
+        ws.onerror = function(){
+            console.log("ws is error");
+        }
+
+
+        ws.onclose = function(){
+            console.log("ws is close");
+        };
+
+        ws.onmessage = function(event){
+            console.log("ws recive message..");
+            console.log(event.data);
+            start_time= new Date().getTime();
+            //处理消息
+            handleMsg(event.data);
+        }
+
+
+        $('#send').click(function(){
+            sendMsg();
+        });
+
+        $("#msgIn").keydown(function(event){
+            event=document.all?window.event:event;
+            if((event.keyCode || event.which)==13){
+                sendMsg();
+            }
+        });
+
+    });
+
+    function sendMsg(){
+        var msg = $('#msgIn').val();
+        if($.trim(msg) == '' ){
+            layer.msg("请输入要发送的内容");
+            return;
+        }
+        $('#chatContent').append(' <div class="message-warp">\n' +
+            '                <div class="date-time">2018-08</div>\n' +
+            '                <div class="user-message">\n' +
+            '                    <div class="head-img">\n' +
+            '                        <img src="images/head_visitor.png" alt="">\n' +
+            '                    </div>\n' +
+            '                    <div class="chat-msg-cont">\n' +
+            '                        <div class="chat-msg-text">\n' +msg+
+            '                        </div>\n' +
+            '                    </div>\n' +
+            '                </div>\n' +
+            '            </div>');
+        $('#msgIn').val('');
+    }
+
+    function reqService(){
+        var packet = {
+            action:type.C_REQ_SERVICE,
+            guest_id:guest_id
+        };
+        var str = JSON.stringify(packet)
+
+        console.log("reqService："+str);
+        ws.send(str);
+    }
+
+    function handleMsg(msgStr){
+        var data = JSON.parse(msgStr);
+        var action = data.action+"";
+        switch (action){
+            case type.C_RESP_RESTTIME:
+                dankefu.c_handlers.resttime(data.body);
+                break;
+            case type.C_RESP_WAITING:
+                dankefu.c_handlers.waiting(data.body);
+                break;
+            case type.C_RESP_JOIN:
+                dankefu.c_handlers.join(data.body);
+                break;
+            case type.C_RESP_NOONESERVICER:
+                dankefu.c_handlers.nooneservicer(data.body);
+                break;
+            case type.C_RESP_INVITINGMESSAGE:
+                break;
+            default:
+                console.error("illegal action: "+action);
+        }
+
+        end_time = new Date().getTime();
+        console.log("process done :"+(end_time-start_time)+" ms");
+    }
+
+</script>
+</html>

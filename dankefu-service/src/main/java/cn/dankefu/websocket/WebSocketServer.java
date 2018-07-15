@@ -36,8 +36,7 @@ public class WebSocketServer {
             groupContext= wsServerStarter.getServerGroupContext();
             wsServerStarter.start();
         } catch (IOException e) {
-            log.error("WebSocket Server Start Fail!!!");
-            log.error(e);
+            log.error("WebSocket Server Start Fail!!!",e);
         }
     }
 }

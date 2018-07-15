@@ -1,5 +1,7 @@
 package cn.dankefu.enums;
 
+import org.nutz.lang.Strings;
+
 /**
  * 聊天记录展示类型
  * author: 蛋蛋的忧伤
@@ -30,5 +32,18 @@ public enum  ChatRecordsDisplayEnum {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public static ChatRecordsDisplayEnum valueOf2(String type){
+        if(Strings.isBlank(type)){
+            return null;
+        }
+        ChatRecordsDisplayEnum[] values = values();
+        for (ChatRecordsDisplayEnum typeEnum : values){
+            if(typeEnum.getType().equalsIgnoreCase(type)){
+                return typeEnum;
+            }
+        }
+        return null;
     }
 }
