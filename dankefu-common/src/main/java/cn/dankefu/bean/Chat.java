@@ -36,6 +36,18 @@ public class Chat extends BasePojo{
     private String name;
 
     @Column
+    @ColDefine(type = ColType.VARCHAR,width = 10)
+    @Comment("来源:ClientSourceEnum")
+    private String source;
+
+
+    @Column
+    @ColDefine(type = ColType.VARCHAR,width = 255)
+    @Comment("浏览器代理内容")
+    private String userAgent;
+
+
+    @Column
     @ColDefine(type = ColType.VARCHAR, width = 32)
     @Comment("访问ip")
     private String ip;
@@ -66,6 +78,11 @@ public class Chat extends BasePojo{
     @ColDefine(type = ColType.VARCHAR, width = 50)
     @Comment("session id")
     private String sid;
+
+
+    private Chat_history curr_session;
+
+    private String status;
 
 
     public String getId() {
@@ -170,5 +187,37 @@ public class Chat extends BasePojo{
     public int hashCode() {
 
         return Objects.hash(id, unitId, sysUserId, name, ip, chatCount, lastTime, endTime, region);
+    }
+
+    public Chat_history getCurr_session() {
+        return curr_session;
+    }
+
+    public void setCurr_session(Chat_history curr_session) {
+        this.curr_session = curr_session;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 }

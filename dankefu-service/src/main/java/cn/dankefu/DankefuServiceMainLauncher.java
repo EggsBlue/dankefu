@@ -2,6 +2,8 @@ package cn.dankefu;
 
 import cn.dankefu.websocket.WebSocketServer;
 import org.nutz.boot.NbApp;
+import org.nutz.dao.Dao;
+import org.nutz.dao.util.Daos;
 import org.nutz.integration.shiro.ShiroSessionProvider;
 import org.nutz.ioc.Ioc;
 import org.nutz.ioc.impl.PropertiesProxy;
@@ -31,6 +33,10 @@ public class DankefuServiceMainLauncher {
     private Ioc ioc;
 
     @Inject
+    private Dao dao;
+
+
+    @Inject
     private PropertiesProxy conf;
 
     @Inject
@@ -42,6 +48,16 @@ public class DankefuServiceMainLauncher {
     }
 
     public void init() {
+        try {
+            //创建表结构
+            Daos.createTablesInPackage(dao, "cn.dankefu", false);
+            if (log.isDebugEnabled()) {
+                //更新表字段
+                Daos.migration(dao, "cn.dankefu", true, false);
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
     public void depose() {

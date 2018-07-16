@@ -41,16 +41,6 @@ public class Chat_history extends BasePojo{
     private String name;
 
     @Column
-    @ColDefine(type = ColType.VARCHAR,width = 10)
-    @Comment("来源:ClientSourceEnum")
-    private String source;
-
-    @Column
-    @ColDefine(type = ColType.VARCHAR,width = 255)
-    @Comment("浏览器代理内容")
-    private String userAgent;
-
-    @Column
     @ColDefine(type = ColType.DATETIME)
     @Comment("结束时间")
     private Date endTime;
@@ -161,21 +151,6 @@ public class Chat_history extends BasePojo{
         this.name = name;
     }
 
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getUserAgent() {
-        return userAgent;
-    }
-
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
 
     public Date getEndTime() {
         return endTime;

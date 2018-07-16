@@ -8,15 +8,20 @@ import cn.dankefu.service.BaseServiceImpl;
 import cn.dankefu.service.ChatService;
 import cn.dankefu.service.SysUnitService;
 import org.nutz.dao.Dao;
+import org.nutz.dao.Sqls;
+import org.nutz.dao.sql.Sql;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.*;
 import org.nutz.lang.random.R;
+import org.tio.core.Tio;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * author: 蛋蛋的忧伤
@@ -39,15 +44,16 @@ public class ChatServiceImpl extends BaseServiceImpl<Chat> implements ChatServic
 
 
     @Override
-    public Chat insert(String unitId,String sourceDesc,String ip) {
+    public Chat insert(String unitId,ClientSourceEnum sourceEnum,HttpServletRequest request) {
         Chat chat = new Chat();
         chat.setId(R.UU16());
         chat.setUnitId(unitId);
-        chat.setName(sourceDesc+"-匿名-"+count());
-        chat.setIp(ip);
+        chat.setName(sourceEnum.getDesc()+"-匿名-"+count());
+        chat.setIp(Lang.getIP(request));
         chat.setChatCount(1);
         chat.setLastTime(new Date());
         chat.setRegion("");
+        chat.setSource(sourceEnum.getSource());
         fastInsert(chat);
         return chat;
     }
@@ -80,12 +86,12 @@ public class ChatServiceImpl extends BaseServiceImpl<Chat> implements ChatServic
         }
         Chat chat;
         if(Strings.isBlank(sid[0])){
-            chat = insert(unitId,sourceEnum.getDesc(),Lang.getIP(request));
+            chat = insert(unitId,sourceEnum,request);
             addCookie(chat.getId(),response);
         }else{
             chat = fetch(sid[0]);
             if(chat == null){
-                chat = insert(unitId,sourceEnum.getDesc(),Lang.getIP(request));
+                chat = insert(unitId,sourceEnum,request);
                 addCookie(chat.getId(),response);
             }else{
                 chat.setChatCount(chat.getChatCount() +1 );
@@ -95,6 +101,16 @@ public class ChatServiceImpl extends BaseServiceImpl<Chat> implements ChatServic
             }
         }
         return chat;
+    }
+
+    @Override
+    public List<Chat> getChatList(String uid) {
+        Sql sql = Sqls.create("select c.id,c.* from dankefu_chat as c left join   (select distinct  chatId from  dankefu_chat_history where sysUserId = @userId )  as h on c.id = h.chatId  order by c.ct desc  ");
+        sql.setParam("userId",uid);
+        sql.setCallback(Sqls.callback.entities());
+        sql.setEntity(dao().getEntity(Chat.class));
+        dao().execute(sql);
+        return sql.getList(Chat.class);
     }
 
 

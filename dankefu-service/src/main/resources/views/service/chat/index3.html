@@ -22,9 +22,9 @@
                   <div class="chatList" :style="height_style">
                     <div v-for="(item,index) in onlineList" :class="[{lock_active:index==0,'online-item':is_online}]" :key="item.id" @mouseenter="item_overShow($event)"
                       @mouseleave="item_outHide($event)" @click="queryHistoryLog($event)">
-                      <img :src="item.headImg" :class="{offline_head:item.status == 'online',chat_head:true}" alt="图片加载失败" :style="online_item_headimg">
+                      <img :src="item.source == 'web_mobile'?web_mobile_icon:item.source == 'web_pc'?web_pc_icon:''" :class="{offline_head:item.status != 'online',chat_head:true}" alt="图片加载失败" :style="online_item_headimg">
                       <p class="chat-name">{{item.name}}</p>
-                      <img :src="mobile_icon" alt="图片加载失败" class="chat_icon" :style="online_item_icon">
+                      <img :src="item.source == 'web_mobile'?web_mobile_icon:item.source == 'web_pc'?web_pc_icon:''" alt="图片加载失败" class="chat_icon" :style="online_item_icon">
                     </div>
                   </div>
                 </el-tab-pane>
@@ -34,7 +34,7 @@
                       @mouseleave="item_outHide($event)" @click="queryHistoryLog($event)">
                       <img :src="item.headImg" :class="{offline_head:item.status == 'online',chat_head:true}" alt="图片加载失败" :style="online_item_headimg">
                       <p class="chat-name">{{item.name}}</p>
-                      <img :src="mobile_icon" alt="图片加载失败" class="chat_icon" :style="online_item_icon">
+                      <img :src="web_mobile_icon" alt="图片加载失败" class="chat_icon" :style="online_item_icon">
                     </div>
                   </div>
                 </el-tab-pane>
@@ -127,7 +127,6 @@
                         </div>
                       </div>
                     </li>
-
 
                     <li class="chatmsg">
                       <div class="showtime"></div>
@@ -238,8 +237,6 @@
                 </el-form-item>
             </el-form>
 
-
-
           </el-tab-pane>
           <el-tab-pane :label="chatHistory" name="chatHistory">
               <div id="timeline-info">Ta来访过 <span>3</span>次 </div>
@@ -314,38 +311,16 @@
         'margin-top': '18px'
       },
       mobileHeadImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
-      mobile_icon: '${base}/assets/img/service/chat/mobile_icon.png',
+      web_mobile_icon: '${base}/assets/img/service/chat/mobile_icon.png',
+      web_pc_icon: '${base}/assets/img/service/chat/pc_icon.png',
       onlineList: [
-        {
-          id: '1',
-          name: '测试1',
-          headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
-          source: 'mobile_web',
-          status: 'online'
-        },
-        {
-          id: '2',
-          name: '测试2',
-          headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
-          source: 'mobile_web',
-          status: 'offline'
-        }
-        ,
-        {
-          id: '3',
-          name: '测试2',
-          headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
-          source: 'mobile_web',
-          status: 'offline'
-        }
-        ,
-        {
-          id: '4',
-          name: '测试2',
-          headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
-          source: 'mobile_web',
-          status: 'offline'
-        }
+        // {
+        //   id: '1',
+        //   name: '测试1',
+        //   headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
+        //   source: 'mobile_web',
+        //   status: 'online'
+        // }
 
       ],
       historyList: [
@@ -404,7 +379,6 @@
       item_outHide: function (e1) {
         // console.log("out");
         $(e1.currentTarget).removeClass('active');
-
       }
     },
     computed: {
@@ -419,6 +393,14 @@
       }
     },
     created: function () {
+      $.post('${base}/chat/list',{},function(resp){
+          console.log(resp);
+          app.onlineList = resp.data.onlines;
+
+
+      });
+
+
       this.height_style.height = window.innerHeight + "px";
     }
   })

@@ -27,13 +27,13 @@ public class WebSocketServer {
     @Inject
     private PropertiesProxy conf;
 
-    public static ServerGroupContext groupContext = null;
+    public static ServerGroupContext GROUPCONTEXT = null;
 
     public void init(){
         int port = Integer.valueOf( conf.get("websocket.port","9423"));
         try {
             WsServerStarter wsServerStarter = new WsServerStarter(port, accepter);
-            groupContext= wsServerStarter.getServerGroupContext();
+            GROUPCONTEXT= wsServerStarter.getServerGroupContext();
             wsServerStarter.start();
         } catch (IOException e) {
             log.error("WebSocket Server Start Fail!!!",e);

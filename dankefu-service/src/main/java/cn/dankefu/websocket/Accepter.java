@@ -8,7 +8,7 @@ import cn.dankefu.service.ChannelWebService;
 import cn.dankefu.service.ChatHistoryService;
 import cn.dankefu.service.ChatService;
 import cn.dankefu.service.SysUserService;
-import cn.dankefu.utils.SocketMsgUtils;
+import cn.dankefu.utils.TioWebSocketUtils;
 import cn.dankefu.websocket.handler.*;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -99,8 +99,8 @@ public class Accepter implements IWsMsgHandler {
             history.setUnitId(chat.getUnitId());
             history.setChatId(chat.getId());
             history.setName(chat.getName());
-            history.setSource(type);
-            history.setUserAgent(request.getUserAgent());
+//            history.setSource(type);
+//            history.setUserAgent(request.getUserAgent());
             history.setAppraise(false);
 			history = chatHistoryService.insert(history);
 
@@ -161,13 +161,11 @@ public class Accepter implements IWsMsgHandler {
 			//通知对应客服人员
             String sysUserId = chat.getSysUserId();
             if(Strings.isNotBlank(sysUserId)){
-                SetWithLock<ChannelContext> channelContextsByUserid = Tio.getChannelContextsByUserid(WebSocketServer.groupContext, sysUserId);
-                if(Lang.isNotEmpty(channelContextsByUserid) && channelContextsByUserid.getObj().size()>0){
-                    channelContextsByUserid.getLock().readLock().lock();
-                    ChannelContext context = channelContextsByUserid.getObj().iterator().next();
-                    Tio.send(context,SocketMsgUtils.makeWsResponse(Type.SERVICER_RESP_LEAVE,NutMap.NEW().addv("chat",chat).addv("time",Times.format("MM-dd HH:mm",new Date())).addv("curr_session",curr_sess)));
-                    channelContextsByUserid.getLock().readLock().unlock();
-                }
+                SetWithLock<ChannelContext> channelContexts = Tio.getChannelContextsByUserid(WebSocketServer.GROUPCONTEXT, sysUserId);
+				ChannelContext channel = TioWebSocketUtils.getInSetWithLock(channelContexts);
+				if(channel != null && !channel.isClosed() && !channel.isRemoved()){
+					Tio.send(channel,TioWebSocketUtils.makeWsResponse(Type.SERVICER_RESP_LEAVE,NutMap.NEW().addv("chat",chat).addv("time",Times.format("MM-dd HH:mm",new Date())).addv("curr_session",curr_sess)));
+				}
             }
 
             //有人离开，排队的人向前一步走

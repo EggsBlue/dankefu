@@ -7,7 +7,7 @@ import cn.dankefu.service.ChannelWebService;
 import cn.dankefu.service.ChatHistoryService;
 import cn.dankefu.service.ChatService;
 import cn.dankefu.service.SysUserService;
-import cn.dankefu.utils.SocketMsgUtils;
+import cn.dankefu.utils.TioWebSocketUtils;
 import cn.dankefu.websocket.MsgHandlerInterface;
 import cn.dankefu.websocket.Type;
 import cn.dankefu.websocket.WebSocketServer;
@@ -84,7 +84,7 @@ public class ReqServiceHandler implements MsgHandlerInterface {
         Chat chat = (Chat) context.getAttribute(Dankefu.CLIENTCHATATTR);
         Chat_history history = (Chat_history) context.getAttribute(Dankefu.CLIENTCURRSESSIONATTR);
         //是否在工作时间
-        Channel_web channel_web = channelWebService.fetchLinks(channelWebService.fetch(Cnd.where("unitId", "=", chat.getUnitId()).and("type", "=", history.getSource())), "channel_worktime");
+        Channel_web channel_web = channelWebService.fetchLinks(channelWebService.fetch(Cnd.where("unitId", "=", chat.getUnitId()).and("type", "=",chat.getSource())), "channel_worktime");
         final boolean[] is_all_busy = {false};
         if(Lang.isNotEmpty(channel_web)){
             Channel_worktime worktime = channel_web.getChannel_worktime();
@@ -97,14 +97,13 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                     // 不在工作时间提醒
                     history.setRestTime(true);
                     chatHistoryService.update(Chain.make("isRestTime",true),Cnd.where("id","=",history.getId()));
-                    Tio.send(context,SocketMsgUtils.makeWsResponse(Type.CLIENT_RESP_RESTTIME,NutMap.NEW()));
+                    Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_RESTTIME,NutMap.NEW()));
                     return;
                 }
             }
         }
 
-
-        SetWithLock<ChannelContext> groups = Tio.getChannelContextsByGroup(WebSocketServer.groupContext, Dankefu.SERVICERGROUPNAME);
+        SetWithLock<ChannelContext> groups = Tio.getChannelContextsByGroup(WebSocketServer.GROUPCONTEXT, Dankefu.SERVICERGROUPNAME);
         List<ChannelContext> onlineServicers = new ArrayList<>();
         boolean isNoone = false;
         if (Lang.isEmpty(groups) ||groups.size() == 0) {
@@ -134,9 +133,9 @@ public class ReqServiceHandler implements MsgHandlerInterface {
         }
 
         if(isNoone){ //暂时无客服在线
-            Tio.send(context,SocketMsgUtils.makeWsResponse(Type.CLIENT_RESP_NOONESERVICER,NutMap.NEW().addv("time",Times.format("MM-dd HH:mm",new Date()))));
+            Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_NOONESERVICER,NutMap.NEW().addv("time",Times.format("MM-dd HH:mm",new Date()))));
             //默认不在线引导用户留言
-            Tio.send(context,SocketMsgUtils.makeWsResponse(Type.CLIENT_RESP_INVITINGMESSAGE,NutMap.NEW()));  //邀请留言
+            Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_INVITINGMESSAGE,NutMap.NEW()));  //邀请留言
         }else{
             if (is_all_busy[0]) { // 客服全忙
                 history.setBusy(true);
@@ -145,20 +144,14 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                 waitingQueue.offer(context);
                 log.debugf("客服繁忙，当前队列排队数量:%s个",waitingQueue.getWaitCount());
                 //提醒访客
-                Tio.send(context,SocketMsgUtils.makeWsResponse(Type.CLIENT_RESP_WAITING,NutMap.NEW().addv("waitingCount",waitingQueue.getWaitCount()-1).addv("time",Times.format("MM-dd HH:mm",new Date()))));
+                Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_WAITING,NutMap.NEW().addv("waitingCount",waitingQueue.getWaitCount()-1).addv("time",Times.format("MM-dd HH:mm",new Date()))));
             }else{// 分配客服
                 //找最近一次的服务记录
                 ChannelContext servicer = null;
                 Chat_history last_history = chatHistoryService.fetch(Cnd.where("chatId", "=", chat.getId()).and("sysUserId", "not is", null).orderBy("createTime", "desc"));
                 if(last_history!=null){
-                    SetWithLock<ChannelContext> contexts = Tio.getChannelContextsByUserid(WebSocketServer.groupContext, history.getSysUserId());
-                    if(contexts!=null && contexts.size()>0){
-                        ReentrantReadWriteLock.ReadLock readLock = contexts.readLock();
-                        readLock.lock();
-                        Set<ChannelContext> obj = contexts.getObj();
-                        servicer = obj.iterator().next();
-                        readLock.unlock();;
-                    }
+                    SetWithLock<ChannelContext> contexts = Tio.getChannelContextsByUserid(WebSocketServer.GROUPCONTEXT, history.getSysUserId());
+                    servicer = TioWebSocketUtils.getInSetWithLock(contexts);
                 }
                 if(servicer == null){  //历史服务客服不在线或压根没有
                     //寻找当前在线中服务数最少的客服
@@ -185,7 +178,7 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                     waitingQueue.offer(context);
                     log.debugf("客服繁忙，当前队列排队数量:%s个",waitingQueue.getWaitCount());
                     //提醒访客
-                    Tio.send(context,SocketMsgUtils.makeWsResponse(Type.CLIENT_RESP_WAITING,NutMap.NEW().addv("waitingCount",waitingQueue.getWaitCount()-1)));
+                    Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_WAITING,NutMap.NEW().addv("waitingCount",waitingQueue.getWaitCount()-1)));
                 }else{//接入成功
                     Sys_user user =(Sys_user) servicer.getAttribute(Dankefu.SERVICERATTR);
                     chat.setSysUserId(user.getId());
@@ -197,8 +190,8 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                     chatService.update(chat);
                     chatHistoryService.update(history);
 
-                    Tio.send(context,SocketMsgUtils.makeWsResponse(Type.CLIENT_RESP_JOIN,NutMap.NEW().addv("servicer",servicer.getAttribute(Dankefu.SERVICERATTR)).addv("history",history).addv("time",Times.format("MM-dd HH:mm",new Date()))));
-                    Tio.send(servicer,SocketMsgUtils.makeWsResponse(Type.SERVICER_RESP_JOIN,NutMap.NEW().addv(Dankefu.CLIENTCURRSESSIONATTR,history)));
+                    Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_JOIN,NutMap.NEW().addv("servicer",servicer.getAttribute(Dankefu.SERVICERATTR)).addv("history",history).addv("time",Times.format("MM-dd HH:mm",new Date()))));
+                    Tio.send(servicer,TioWebSocketUtils.makeWsResponse(Type.SERVICER_RESP_JOIN,NutMap.NEW().addv(Dankefu.CLIENTCURRSESSIONATTR,history)));
                 }
             }
         }
