@@ -61,7 +61,7 @@ public class Customer extends BasePojo{
     @Column
     @ColDefine(type = ColType.INT)
     @Comment("年龄")
-    private int age;
+    private Integer age;
 
     @Column
     @ColDefine(type = ColType.VARCHAR, width = 32)
@@ -97,7 +97,6 @@ public class Customer extends BasePojo{
     @ColDefine(type = ColType.VARCHAR, width = 100)
     @Comment("详细地址")
     private String address;
-
 
     @Column
     @ColDefine(type = ColType.VARCHAR, width = 20)
@@ -178,11 +177,11 @@ public class Customer extends BasePojo{
         this.email = email;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

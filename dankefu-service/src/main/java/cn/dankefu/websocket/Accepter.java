@@ -50,6 +50,8 @@ public class Accepter implements IWsMsgHandler {
 	@Inject
     private ChannelWebService channelWebService;
 
+
+
 	@Inject
 	private WaitingQueue waitingQueue;
 
@@ -154,19 +156,23 @@ public class Accepter implements IWsMsgHandler {
 			//TODO 通知当前服务的访客
 		}else{
 			Chat chat =(Chat) channelContext.getAttribute("chat");
-            Chat_history curr_sess =(Chat_history) channelContext.getAttribute("curr_session");
+            //Chat_history curr_sess =(Chat_history) channelContext.getAttribute("curr_session");
 
-            log.debugf("访客【%s】下线了",chat.getName());
+            if(chat!=null){
+				chat.setStatus("offline");
+				chatService.update(chat);
+				log.debugf("访客【%s】下线了",chat.getName());
 
-			//通知对应客服人员
-            String sysUserId = chat.getSysUserId();
-            if(Strings.isNotBlank(sysUserId)){
-                SetWithLock<ChannelContext> channelContexts = Tio.getChannelContextsByUserid(WebSocketServer.GROUPCONTEXT, sysUserId);
-				ChannelContext channel = TioWebSocketUtils.getInSetWithLock(channelContexts);
-				if(channel != null && !channel.isClosed() && !channel.isRemoved()){
-					Tio.send(channel,TioWebSocketUtils.makeWsResponse(Type.SERVICER_RESP_LEAVE,NutMap.NEW().addv("chat",chat).addv("time",Times.format("MM-dd HH:mm",new Date())).addv("curr_session",curr_sess)));
+				//通知对应客服人员
+				String sysUserId = chat.getSysUserId();
+				if(Strings.isNotBlank(sysUserId)){
+					SetWithLock<ChannelContext> channelContexts = Tio.getChannelContextsByUserid(WebSocketServer.GROUPCONTEXT, sysUserId);
+					ChannelContext channel = TioWebSocketUtils.getInSetWithLock(channelContexts);
+					if(channel != null && !channel.isClosed() && !channel.isRemoved()){
+						Tio.send(channel,TioWebSocketUtils.makeWsResponse(Type.SERVICER_RESP_LEAVE,NutMap.NEW().addv("time",Times.format("MM-dd HH:mm",new Date())).addv("curr_session",chat)));
+					}
 				}
-            }
+			}
 
             //有人离开，排队的人向前一步走
             ChannelContext poolContext = waitingQueue.pool();

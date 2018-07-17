@@ -1,409 +1,614 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-  <link rel="stylesheet" href="${base}/assets/js/plugins/layui/css/layui.css">
-  <link rel="stylesheet" href="${base}/assets/css/service/chat/index3.css">
-  <style>
-  </style>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="${base}/assets/js/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="${base}/assets/css/service/chat/index3.css">
+
+    <link href="${base}/assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <style>
+        #chatInfo{
+            height: 800px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 
 <body ref="myBody">
-  <div id="app">
+<div id="app">
     <el-row>
-      <el-col :span="4">
-        <div class="grid-content bg-purple chatContent">
-          <div>
-            <template>
-              <el-tabs  :stretch=true v-model="tab1_activeName" @tab-click="tab1Click">
-                <el-tab-pane :label="tab_online" name="online">
-                  <div class="chatList" :style="height_style">
-                    <div v-for="(item,index) in onlineList" :class="[{lock_active:index==0,'online-item':is_online}]" :key="item.id" @mouseenter="item_overShow($event)"
-                      @mouseleave="item_outHide($event)" @click="queryHistoryLog($event)">
-                      <img :src="item.source == 'web_mobile'?web_mobile_icon:item.source == 'web_pc'?web_pc_icon:''" :class="{offline_head:item.status != 'online',chat_head:true}" alt="图片加载失败" :style="online_item_headimg">
-                      <p class="chat-name">{{item.name}}</p>
-                      <img :src="item.source == 'web_mobile'?web_mobile_icon:item.source == 'web_pc'?web_pc_icon:''" alt="图片加载失败" class="chat_icon" :style="online_item_icon">
-                    </div>
-                  </div>
+        <el-col :span="4">
+            <div class="grid-content bg-purple chatContent">
+                <div>
+                    <template>
+                        <el-tabs :stretch=true v-model="tab1_activeName" @tab-click="tab1Click">
+                            <el-tab-pane :label="tab_online+total" name="online">
+                                <div class="chatList" :style="height_style">
+                                    <div v-for="(item,index) in onlineList"
+                                         :class="[{lock_active:item.lock_active,'online-item':is_online}]"
+                                         :key="item.id" @mouseenter="item_overShow($event)"
+                                         @mouseleave="item_outHide($event)" @click="queryHistoryLog(item,$event)">
+                                        <img :src="item.source == 'web_mobile'?web_mobile_icon:item.source == 'web_pc'?web_pc_icon:''"
+                                             :class="{offline_head:item.status != 'online',chat_head:true}" alt="图片加载失败"
+                                             :style="online_item_headimg">
+                                        <p class="chat-name">{{item.name}}</p>
+                                        <!--<i :class="item.source == 'web_mobile'?'fa fa-mobile fa-2x':item.source == 'web_pc'?'fa fa-television':'' " aria-hidden="true"></i>-->
+                                    </div>
+                                </div>
+                            </el-tab-pane>
+                            <el-tab-pane :label="offlineName" name="history">
+                                <div class="chatList" :style="height_style">
+                                    <div v-for="(item,index) in historyList"
+                                         :class="[{lock_active:item.lock_active,'online-item':is_online}]" :key="item.id"
+                                         @mouseenter="item_overShow($event)"
+                                         @mouseleave="item_outHide($event)" @click="queryHistoryLog(item,$event)">
+                                        <img :src="item.source == 'web_mobile'?web_mobile_icon:item.source == 'web_pc'?web_pc_icon:''"
+                                             :class="{offline_head:true,chat_head:true}" alt="图片加载失败"
+                                             :style="online_item_headimg">
+                                        <p class="chat-name">{{item.name}}</p>
+                                        <!--<img :src="web_mobile_icon" alt="图片加载失败" class="chat_icon" :style="online_item_icon">-->
+                                    </div>
+                                </div>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </template>
+                </div>
+            </div>
+        </el-col>
+        <el-col :span="14">
+            <div class="grid-content bg-purple-light" id="centre">
+                <el-container>
+                    <el-header id="centre-header">
+                        <div class="centre-header-item">
+                            <p>正在与<span>[蛋蛋]</span>聊天</p>
+                            <img class="centre-header-req" src="${base}/assets/img/service/chat/heart.png" width="24"
+                                 height="24" alt="邀请评价">
+                            <div class="centre-header-source-box">
+                                <img src="${base}/assets/img/service/chat/mobile_icon2.png" width="32" height="32"
+                                     alt="">
+                            </div>
+                        </div>
+                    </el-header>
+                    <el-main id="centre-body">
+                        <div id="no_chats"></div>
+                        <div id="centre-body-chatbox">
+                            <div id="wrap">
+                                <ul id="centre-body-chat-list">
+                                    <li class="chatmsg">
+                                        <div class="showtime">2018-06-06 23:23:</div>
+                                        <div class="img-left" style="">
+                                            <img class="my-circle  se_pic"
+                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
+                                                 height="50px">
+                                        </div>
+                                        <div class="outer-left">
+                                            <div class="customer">
+                                                <pre>写页面是件苦逼的事情</pre>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="chatmsg">
+                                        <div class="showtime"></div>
+                                        <div class="img-left" style="">
+                                            <img class="my-circle  se_pic"
+                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
+                                                 height="50px">
+                                        </div>
+                                        <div class="outer-left">
+                                            <div class="customer">
+                                                <pre>前端套路深,我要回后端...</pre>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="chatmsg">
+                                        <div class="showtime"></div>
+                                        <div class="img-right" style="">
+                                            <img class="my-circle  se_pic"
+                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
+                                                 height="50px">
+                                        </div>
+                                        <div class="outer-right">
+                                            <div class="service">
+                                                <pre>慢慢就浅了</pre>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="chatmsg">
+                                        <div class="showtime"></div>
+                                        <div class="img-left" style="">
+                                            <img class="my-circle  se_pic"
+                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
+                                                 height="50px">
+                                        </div>
+                                        <div class="outer-left">
+                                            <div class="customer">
+                                                <pre>这页面费了好多事</pre>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="chatmsg">
+                                        <div class="showtime"></div>
+                                        <div class="img-right" style="">
+                                            <img class="my-circle  se_pic"
+                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
+                                                 height="50px">
+                                        </div>
+                                        <div class="outer-right">
+                                            <div class="service">
+                                                <pre>先写好这一版再说....</pre>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="chatmsg">
+                                        <div class="showtime"></div>
+                                        <div class="img-right" style="">
+                                            <img class="my-circle  se_pic"
+                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
+                                                 height="50px">
+                                        </div>
+                                        <div class="outer-right">
+                                            <div class="service">
+                                                <pre>Emmmmm......</pre>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="chatmsg">
+                                        <div class="showtime"></div>
+                                        <div class="img-right" style="">
+                                            <img class="my-circle  se_pic"
+                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
+                                                 height="50px">
+                                        </div>
+                                        <div class="outer-right">
+                                            <div class="service">
+                                                <pre>截图留念~</pre>
+                                            </div>
+                                        </div>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                            <div id="footer">
+                                <div class="msg-toolbar" style="background: #fff;border: none;">
+                                </div>
+                                <div class="msg-input">
+                                    <div class="input-box">
+                      <textarea id="text_in" placeholder="请输入要发送的内容" class="edit-ipt"
+                                style="overflow-y: auto; font-weight: normal; font-size: 14px; overflow-x: hidden; word-break: break-all; font-style: normal; outline: none;padding: 5px;border:none;"
+                                contenteditable="true" hidefocus="true" tabindex="0"></textarea>
+                                    </div>
+
+                                    <div class="msg-toolbar-footer">
+                                        <el-button type="primary" plain>发送</el-button>
+                                        <!-- <a id="showinfo" style="position: absolute;right: 0;top: 0;width: 20%;height: 42px;background: #d41010;text-align: center; border-left: 1px solid #FFF;cursor: pointer;">
+                                                     <i class="triangle" style="margin-top: 21px;"></i> -->
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </el-main>
+                </el-container>
+            </div>
+        </el-col>
+        <el-col :span="6">
+            <el-tabs :stretch=true v-model="tab2_activeName" @tab-click="tab2Click">
+                <el-tab-pane id="chatInfo" :label="chatInfo" name="chatInfo">
+                    <el-form ref="customer" class="info-form" label-width="80px">
+                        <el-form-item label="姓名">
+                            <el-input v-model="customer.name" placeholder="请输入姓名"></el-input>
+                            <input type="hidden" :value="customer.id">
+                            <input type="hidden" :value="customer.chatId">
+                            <input type="hidden" :value="customer.unitId">
+
+                            <input type="hidden" :value="customer.source">
+                            <input type="hidden" :value="customer.platform">
+                        </el-form-item>
+
+                        <el-form-item label="性别">
+                            <el-select v-model="customer.gender" placeholder="请选择性别">
+                                <el-option label="男" value="男"></el-option>
+                                <el-option label="女" value="女"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="备注">
+                            <el-input v-model="customer.remark" placeholder="请输入备注"></el-input>
+                        </el-form-item>
+                        <el-form-item label="联系电话">
+                            <el-input v-model="customer.phone" placeholder="请输入联系电话"></el-input>
+                        </el-form-item>
+                        <el-form-item label="邮箱">
+                            <el-input v-model="customer.email" placeholder="请输入邮箱"></el-input>
+                        </el-form-item>
+                        <el-form-item label="年龄">
+                            <el-input v-model="customer.age"  placeholder="请输入年龄"></el-input>
+                        </el-form-item>
+
+
+                        <el-form-item label="出生年月">
+                            <el-input v-model="customer.birthday" placeholder="请输入出生年月"></el-input>
+                        </el-form-item>
+
+
+                        <el-form-item label="证件类型">
+                            <el-select v-model="customer.cardType" placeholder="请选择证件类型">
+                                <el-option label="身份证" value="身份证"></el-option>
+                                <el-option label="军官证" value="军官证"></el-option>
+                                <el-option label="护照" value="护照"></el-option>
+                                <el-option label="其他" value="其他"></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="证件号">
+                            <el-input v-model="customer.card" placeholder="请输入证件号"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="地址" inline="true">
+                            <el-select v-model="customer.province" placeholder="省份">
+                                <el-option label="其他" value="其他"></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-select v-model="customer.city" placeholder="市">
+                                <el-option label="其他" value="其他"></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-select v-model="customer.region" placeholder="区">
+                                <el-option label="其他" value="其他"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="详细地址">
+                            <el-input v-model="customer.address" placeholder="请输入详细地址"></el-input>
+                        </el-form-item>
+                        <el-form-item label="职业">
+                            <el-input v-model="customer.profession" placeholder="请输入职业"></el-input>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button @click="saveCustomer">提交</el-button>
+                        </el-form-item>
+                    </el-form>
+
                 </el-tab-pane>
-                <el-tab-pane :label="offlineName" name="history">
-                  <div class="chatList" :style="height_style">
-                    <div v-for="(item,index) in historyList" :class="[{lock_active:index==0,'online-item':is_online}]" :key="item.id" @mouseenter="item_overShow($event)"
-                      @mouseleave="item_outHide($event)" @click="queryHistoryLog($event)">
-                      <img :src="item.headImg" :class="{offline_head:item.status == 'online',chat_head:true}" alt="图片加载失败" :style="online_item_headimg">
-                      <p class="chat-name">{{item.name}}</p>
-                      <img :src="web_mobile_icon" alt="图片加载失败" class="chat_icon" :style="online_item_icon">
-                    </div>
-                  </div>
+                <el-tab-pane :label="chatHistory" name="chatHistory">
+                    <div id="timeline-info">Ta来访过 <span>3</span>次</div>
+
+                    <ul class="layui-timeline">
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title"><span class="time">2018-07-08 20:11</span> <img
+                                        src="${base}/assets/img/service/chat/mobile_icon2.png" width="25" height="25"
+                                        alt=""> 客服:<span>wendal</span></div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title"><span class="time">2018-07-08 20:12</span> <img
+                                        src="${base}/assets/img/service/chat/mobile_icon2.png" width="25" height="25"
+                                        alt=""> 客服:<span>wendal</span></div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title"><span class="time">2018-07-08 20:13</span> <img
+                                        src="${base}/assets/img/service/chat/mobile_icon2.png" width="25" height="25"
+                                        alt=""> 客服:<span>wendal</span></div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title"><span class="time">2018-07-08 20:14</span> <img
+                                        src="${base}/assets/img/service/chat/mobile_icon2.png" width="25" height="25"
+                                        alt=""> 客服:<span>wendal</span></div>
+                            </div>
+                        </li>
+
+                    </ul>
+
                 </el-tab-pane>
-              </el-tabs>
-            </template>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="14">
-        <div class="grid-content bg-purple-light" id="centre">
-          <el-container>
-            <el-header id="centre-header">
-              <div class="centre-header-item">
-                <p>正在与<span>[蛋蛋]</span>聊天</p>
-                <img class="centre-header-req" src="${base}/assets/img/service/chat/heart.png" width="24" height="24" alt="邀请评价">
-                <div class="centre-header-source-box">
-                  <img src="${base}/assets/img/service/chat/mobile_icon.png" width="32" height="32" alt="">
-                </div>
-              </div>
-            </el-header>
-            <el-main id="centre-body">
-              <div id="no_chats"></div>
-              <div id="centre-body-chatbox">
-                <div id="wrap">
-                  <ul id="centre-body-chat-list">
-                    <li class="chatmsg">
-                      <div class="showtime">2018-06-06 23:23:</div>
-                      <div class="img-left" style="">
-                        <img class="my-circle  se_pic" src="https://www.wolive.cc/assets/upload/0.jpg" width="50px" height="50px">
-                      </div>
-                      <div class="outer-left">
-                        <div class="customer">
-                          <pre>写页面是件苦逼的事情</pre>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="chatmsg">
-                      <div class="showtime"></div>
-                      <div class="img-left" style="">
-                        <img class="my-circle  se_pic" src="https://www.wolive.cc/assets/upload/0.jpg" width="50px" height="50px">
-                      </div>
-                      <div class="outer-left">
-                        <div class="customer">
-                          <pre>前端套路深,我要回后端...</pre>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="chatmsg">
-                      <div class="showtime"></div>
-                      <div class="img-right" style="">
-                        <img class="my-circle  se_pic" src="https://www.wolive.cc/assets/upload/0.jpg" width="50px" height="50px">
-                      </div>
-                      <div class="outer-right">
-                        <div class="service">
-                          <pre>慢慢就浅了</pre>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="chatmsg">
-                      <div class="showtime"></div>
-                      <div class="img-left" style="">
-                        <img class="my-circle  se_pic" src="https://www.wolive.cc/assets/upload/0.jpg" width="50px" height="50px">
-                      </div>
-                      <div class="outer-left">
-                        <div class="customer">
-                          <pre>这页面费了好多事</pre>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="chatmsg">
-                      <div class="showtime"></div>
-                      <div class="img-right" style="">
-                        <img class="my-circle  se_pic" src="https://www.wolive.cc/assets/upload/0.jpg" width="50px" height="50px">
-                      </div>
-                      <div class="outer-right">
-                        <div class="service">
-                          <pre>先写好这一版再说....</pre>
-                        </div>
-                      </div>
-                    </li>
-
-                    <li class="chatmsg">
-                      <div class="showtime"></div>
-                      <div class="img-right" style="">
-                        <img class="my-circle  se_pic" src="https://www.wolive.cc/assets/upload/0.jpg" width="50px" height="50px">
-                      </div>
-                      <div class="outer-right">
-                        <div class="service">
-                          <pre>Emmmmm......</pre>
-                        </div>
-                      </div>
-                    </li>
-
-                    <li class="chatmsg">
-                      <div class="showtime"></div>
-                      <div class="img-right" style="">
-                        <img class="my-circle  se_pic" src="https://www.wolive.cc/assets/upload/0.jpg" width="50px" height="50px">
-                      </div>
-                      <div class="outer-right">
-                        <div class="service">
-                          <pre>截图留念~</pre>
-                        </div>
-                      </div>
-                    </li>
-
-
-                  </ul>
-                </div>
-                <div id="footer">
-                  <div class="msg-toolbar" style="background: #fff;border: none;">
-                  </div>
-                  <div class="msg-input">
-                    <div class="input-box">
-                      <textarea id="text_in" placeholder="请输入要发送的内容" class="edit-ipt" style="overflow-y: auto; font-weight: normal; font-size: 14px; overflow-x: hidden; word-break: break-all; font-style: normal; outline: none;padding: 5px;border:none;"
-                        contenteditable="true" hidefocus="true" tabindex="0"></textarea>
-                    </div>
-
-                    <div class="msg-toolbar-footer">
-                      <el-button type="primary" plain>发送</el-button>
-                      <!-- <a id="showinfo" style="position: absolute;right: 0;top: 0;width: 20%;height: 42px;background: #d41010;text-align: center; border-left: 1px solid #FFF;cursor: pointer;">
-                                   <i class="triangle" style="margin-top: 21px;"></i> -->
-                      </a>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </el-main>
-          </el-container>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <el-tabs :stretch=true v-model="tab2_activeName" @tab-click="tab2Click">
-          <el-tab-pane id="chatInfo" :label="chatInfo" name="chatInfo">
-            <el-form ref="customer" class="info-form" label-width="80px">
-              <el-form-item label="姓名">
-                <el-input v-model="customer.name" placeholder="请输入姓名"></el-input>
-              </el-form-item>
-
-              <el-form-item label="性别">
-                <el-select v-model="customer.gender" placeholder="请选择性别">
-                  <el-option label="男" value="男"></el-option>
-                  <el-option label="女" value="女"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="备注">
-                <el-input v-model="customer.remark" placeholder="请输入备注" ></el-input>
-              </el-form-item>
-              <el-form-item label="联系电话">
-                <el-input v-model="customer.phone" placeholder="请输入联系电话" ></el-input>
-              </el-form-item>
-              <el-form-item label="邮箱">
-                <el-input v-model="customer.email" placeholder="请输入邮箱" ></el-input>
-              </el-form-item>
-              <el-form-item label="年龄">
-                <el-input v-model="customer.age" placeholder="请输入年龄" ></el-input>
-              </el-form-item>
-              
-
-              <el-form-item label="出生年月">
-                <el-input v-model="customer.birthday" placeholder="请输入出生年月" ></el-input>
-              </el-form-item>
-             
-
-              <el-form-item label="证件类型">
-                 <el-select  v-model="customer.cardType" placeholder="请选择证件类型">
-                    <el-option label="身份证" value="身份证"></el-option>
-                    <el-option label="军官证" value="军官证"></el-option>
-                    <el-option label="护照" value="护照"></el-option>
-                    <el-option label="其他" value="其他"></el-option>
-                  </el-select>
-                </el-form-item>
-
-                <el-form-item label="证件号">
-                  <el-input v-model="customer.card" placeholder="请输入证件号" ></el-input>
-                </el-form-item>
-              
-                <el-form-item label="地址" inline="true">
-                  <el-select  v-model="customer.province" placeholder="省份">
-                     <el-option label="其他" value="其他"></el-option>
-                   </el-select>
-                  </el-form-item>
-
-                  <el-form-item>
-                    <el-select  v-model="customer.city" placeholder="市">
-                      <el-option label="其他" value="其他"></el-option>
-                    </el-select>
-                  </el-form-item>
-
-                  <el-form-item>
-                    <el-select  v-model="customer.region" placeholder="区">
-                      <el-option label="其他" value="其他"></el-option>
-                    </el-select>
-                 </el-form-item>
-                 <el-form-item label="详细地址">
-                  <el-input v-model="customer.address" placeholder="请输入详细地址" ></el-input>
-                </el-form-item>
-                <el-form-item label="职业">
-                  <el-input v-model="customer.profession" placeholder="请输入职业" ></el-input>
-                </el-form-item>
-            </el-form>
-
-          </el-tab-pane>
-          <el-tab-pane :label="chatHistory" name="chatHistory">
-              <div id="timeline-info">Ta来访过 <span>3</span>次 </div>
-
-              <ul class="layui-timeline">
-                  <li class="layui-timeline-item">
-                      <i class="layui-icon layui-timeline-axis"></i>
-                      <div class="layui-timeline-content layui-text">
-                        <div class="layui-timeline-title">  <span class="time">2018-07-08 20:11</span> <img src="${base}/assets/img/service/chat/mobile_icon.png" width="25" height="25" alt="">  客服:<span>wendal</span></div>
-                      </div>
-                    </li>
-                  <li class="layui-timeline-item">
-                    <i class="layui-icon layui-timeline-axis"></i>
-                    <div class="layui-timeline-content layui-text">
-                        <div class="layui-timeline-title">  <span class="time">2018-07-08 20:12</span> <img src="${base}/assets/img/service/chat/mobile_icon.png" width="25" height="25" alt="">  客服:<span>wendal</span></div>
-                    </div>
-                  </li>
-                  <li class="layui-timeline-item">
-                    <i class="layui-icon layui-timeline-axis"></i>
-                    <div class="layui-timeline-content layui-text">
-                        <div class="layui-timeline-title">  <span class="time">2018-07-08 20:13</span> <img src="${base}/assets/img/service/chat/mobile_icon.png" width="25" height="25" alt="">  客服:<span>wendal</span></div>
-                    </div>
-                  </li>
-                  <li class="layui-timeline-item">
-                    <i class="layui-icon layui-timeline-axis"></i>
-                    <div class="layui-timeline-content layui-text">
-                        <div class="layui-timeline-title">  <span class="time">2018-07-08 20:14</span> <img src="${base}/assets/img/service/chat/mobile_icon.png" width="25" height="25" alt="">  客服:<span>wendal</span></div>
-                    </div>
-                  </li>
-                
-                </ul>
-
-          </el-tab-pane>
-        </el-tabs>
-      </el-col>
+            </el-tabs>
+        </el-col>
     </el-row>
-  </div>
+</div>
 </body>
-<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 <!-- import Vue before Element -->
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script type="text/javascript" src="https://unpkg.com/vue/dist/vue.js"></script>
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="https://unpkg.com/element-ui/lib/index.js"></script>
 
+<script type="text/javascript" src="${base}/assets/js/plugins/layui/layui.all.js"></script>
+<script type="text/javascript" src="${base}/assets/js/reconnecting-websocket.js"></script>
+<script type="text/javascript" src="${base}/assets/js/websocket/dankefu-types.js"></script>
+<script type="text/javascript" src="${base}/assets/js/websocket/dankefu-tpls.js"></script>
+<script type="text/javascript" src="${base}/assets/js/websocket/dankefu.js"></script>
 <script>
-  var app = new Vue({
-    el: '#app',
-    data: {
-      tab1_activeName: 'online',
-      tab2_activeName: 'chatInfo',
-      onlienName: '当前访客',
-      offlineName: '历史访客',
-      chatInfo: '来访信息',
-      chatHistory: '历史来访',
-      curOnline: '3',
-      total: '29',
-      is_lock_active: true,
-      is_online: true,
-      height_style: {
-        height: '800px',
-      },
-      online_item_headimg: {
-        width: '50px',
-        height: '50px',
-        display: 'inline'
-      },
-      online_item_icon: {
-        width: '25px',
-        height: '25px',
-        float: 'right',
-        'margin-right': '15px',
-        'margin-top': '18px'
-      },
-      mobileHeadImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
-      web_mobile_icon: '${base}/assets/img/service/chat/mobile_icon.png',
-      web_pc_icon: '${base}/assets/img/service/chat/pc_icon.png',
-      onlineList: [
-        // {
-        //   id: '1',
-        //   name: '测试1',
-        //   headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
-        //   source: 'mobile_web',
-        //   status: 'online'
-        // }
-
-      ],
-      historyList: [
-        {
-          id: '5',
-          name: '测试3',
-          headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
-          source: 'mobile_web',
-          status: 'online'
+    var ws;
+    var laytpl;
+    var start_time;
+    var end_time;
+    var app = new Vue({
+        el: '#app',
+        data: {
+            tab1_activeName: 'online',
+            tab2_activeName: 'chatInfo',
+            onlienName: '当前访客',
+            offlineName: '历史访客',
+            chatInfo: '来访信息',
+            chatHistory: '历史来访',
+            curOnline: '3',
+            total: 1,
+            is_lock_active: true,
+            is_online: true,
+            height_style: {
+                height: '800px',
+            },
+            online_item_headimg: {
+                width: '50px',
+                height: '50px',
+                display: 'inline'
+            },
+            online_item_icon: {
+                width: '25px',
+                height: '25px',
+                float: 'right',
+                'margin-right': '15px',
+                'margin-top': '18px'
+            },
+            mobileHeadImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
+            web_mobile_icon: '${base}/assets/img/service/chat/mobile_icon2.png',
+            web_pc_icon: '${base}/assets/img/service/chat/pc_icon2.png',
+            onlineList: [
+                // {
+                //   id: '1',
+                //   name: '测试1',
+                //   headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
+                //   source: 'mobile_web',
+                //   status: 'online'
+                // }
+            ],
+            historyList: [
+                // {
+                //   id: '5',
+                //   name: '测试3',
+                //   headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
+                //   source: 'mobile_web',
+                //   status: 'online'
+                // }
+            ],
+            customer: {
+                id:'',
+                chatId:'',
+                unitId:'',
+                name: '',
+                remark: '',
+                gender: '',
+                phone: '',
+                email: '',
+                age: '',
+                birthday: '',
+                cardType: '',
+                card: '',
+                province: '',
+                city: '',
+                region: '',
+                address: '',
+                profession: '',
+                source:'',
+                platform:''
+            }
         },
-        {
-          id: '6',
-          name: '测试4',
-          headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
-          source: 'mobile_web',
-          status: 'offline'
+        methods: {
+            tab1Click: function (tab, event) {
+                // console.log(tab, event);
+            },
+            tab2Click: function (tab, event) {
+            },
+            queryHistoryLog: function (item, e1) {
+                // console.log(e1);
+                console.log(item);
+               //切换效果
+                app.onlineList = app.onlineList.filter(function (i) {
+                    Vue.set(i, 'lock_active', false)
+                    return i;
+                })
+                app.historyList = app.historyList.filter(function (i) {
+                    Vue.set(i, 'lock_active', false)
+                    return i;
+                })
+                Vue.set(item, 'lock_active', true)
+
+                //刷新客户信息
+                if(item.customer!=null && item.customer!=undefined){
+                    app.customer = item.customer;
+                }else{
+                    app.customer = Object.assign({}, app.customer, {
+                        chatId:  item.id,
+                        unitId:item.unitId,
+                        source:item.source,
+                        id:'',
+                        name: '',
+                        remark: '',
+                        gender: '',
+                        phone: '',
+                        email: '',
+                        age: '',
+                        birthday: '',
+                        cardType: '',
+                        card: '',
+                        province: '',
+                        city: '',
+                        region: '',
+                        address: '',
+                        profession: '',
+                        platform:''
+                    })
+                }
+            },
+            item_overShow: function (e1) {
+                $(e1.currentTarget).addClass('active');
+            },
+            item_outHide: function (e1) {
+                $(e1.currentTarget).removeClass('active');
+            },
+            saveCustomer:function(){
+                console.log(app.customer);
+                $.post('${base}/customer/save',JSON.stringify(app.customer),function(resp){
+                    console.log(resp);
+                    if(resp.code == 0){
+                        app.customer = resp.data;
+                        var flag = true;
+                        app.onlineList = app.onlineList.filter(function (item) {
+                            if(item.id == resp.data.chatId){
+                               item.customer = resp.data;
+                                flag = false;
+                            }
+                            return item;
+                        })
+                        if(flag){
+                            app.historyList = app.historyList.filter(function (item) {
+                                if(item.id == resp.data.chatId){
+                                    item.customer = resp.data;
+                                    flag = false;
+                                }
+                                return item;
+                            })
+                        }
+                        layer.msg("保存成功");
+                    }
+                });
+            }
+        },
+        computed: {
+            tab_online: function () {
+                return this.onlienName + "  " + this.onlineList.length + '/';
+            }
+        },
+        watch: {
+            'onlineList'() {
+            },
+            customer:{
+                handler(val, oldVal){
+                    console.log(app.customer);
+                    // $.post('${base}/customer/save',JSON.stringify(app.customer),function(resp){
+                    //     console.log(resp);
+                    //     if(resp.code == 0){
+                    //         app.customer = resp.data;
+                    //     }
+                    // });
+                },
+                deep:true
+            }
+        },
+        created: function () {
+            $.post('${base}/chat/init', {}, function (resp) {
+                console.log(resp);
+                var data = resp.data;
+                app.onlineList = data.onlines;
+                app.onlineList = app.onlineList.filter(function (item) {
+                    item = Object.assign({}, item, {
+                        lock_active: false
+                    })
+                    return item;
+                })
+
+                app.onlineList[0] = Object.assign({}, app.onlineList[0], {
+                    lock_active: true
+                })
+
+                if(app.onlineList[0].customer!=null && app.onlineList[0].customer!=undefined){
+                    app.customer = app.onlineList[0].customer;
+                }else{
+                    app.customer = Object.assign({}, this.customer, {
+                        chatId:  item.id,
+                        unitId:item.unitId,
+                        source:item.source
+                    })
+
+                }
+
+                app.historyList = data.historys;
+                app.total = data.me.maxServiceCount;
+
+            });
+            this.height_style.height = window.innerHeight + "px";
         }
-      ],
-      customer:{
-          name:'',
-          remark:'',
-          gender:'',
-          phone:'',
-          email:'',
-          age:'',
-          birthday:'',
-          cardType:'',
-          card:'',
-          province:'',
-          city:'',
-          region:'',
-          address:'',
-          profession:''
-
-      }
-    },
-    methods: {
-      tab1Click: function (tab, event) {
-        // console.log(tab, event);
-
-      },
-      tab2Click: function (tab, event) {
-
-      },
-      queryHistoryLog: function (e1) {
-        // console.log(e1);
-        // console.log(e1.currentTarget);
+    });
 
 
-      },
-      item_overShow: function (e1) {
-        // console.log("over");
-        $(e1.currentTarget).addClass('active');
+    $(function () {
+        start_time = new Date().getTime();
+        layui.use('laytpl', function () {
+            laytpl = layui.laytpl;
+        });
 
-      },
-      item_outHide: function (e1) {
-        // console.log("out");
-        $(e1.currentTarget).removeClass('active');
-      }
-    },
-    computed: {
-      tab_online: function () {
-        return this.onlienName + "  " + this.onlineList.length + '/' + this.total;
-      }
-    },
-    watch: {
-      'onlineList': function () {
-        this.total = this.onlineList.length;
-        this.tab_online
-      }
-    },
-    created: function () {
-      $.post('${base}/chat/list',{},function(resp){
-          console.log(resp);
-          app.onlineList = resp.data.onlines;
+        //初始化websocket连接
+        ws = new ReconnectingWebSocket('ws://${@conf.get("websocket.ip")}:${@conf.get("websocket.port")}?service_id=${session.uid!}', null, {
+            debug: true,
+            reconnectInterval: 3000
+        });
 
+        ws.onopen = function (event) {
+            console.log("ws is open");
+            end_time = new Date().getTime();
+            console.log("init done: " + (end_time - start_time) + " ms");
+        };
 
-      });
+        ws.onerror = function () {
+            console.log("ws is error");
+        }
 
+        ws.onclose = function () {
+            console.log("ws is close");
+        };
 
-      this.height_style.height = window.innerHeight + "px";
+        ws.onmessage = function (event) {
+            console.log("ws recive message..");
+            // console.log(event.data);
+            start_time = new Date().getTime();
+            //处理消息
+            handleMsg(event.data);
+        }
+
+        $("[name=message]").keydown(function (event) {
+            event = document.all ? window.event : event;
+            if ((event.keyCode || event.which) == 13) {
+                alert("发送消息");
+            }
+        });
+    });
+
+    function handleMsg(msgStr) {
+        var data = JSON.parse(msgStr);
+        var action = data.action + "";
+        switch (action) {
+            case type.S_RESP_JOIN:
+                dankefu.s_handlers.join(data.body);
+                break;
+            case type.S_RESP_LEAVE:
+                dankefu.s_handlers.leave(data.body);
+                break;
+            default:
+                console.error("illegal action: " + action);
+        }
+
+        end_time = new Date().getTime();
+        console.log("process done :" + (end_time - start_time) + " ms");
     }
-  })
+
 
 </script>
 

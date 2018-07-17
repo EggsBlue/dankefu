@@ -183,7 +183,7 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                     Sys_user user =(Sys_user) servicer.getAttribute(Dankefu.SERVICERATTR);
                     chat.setSysUserId(user.getId());
                     chat.setLastTime(new Date());
-
+                    chat.setStatus("online");
                     history.setSysUserId(user.getId());
                     history.setPersonService(true);
 
@@ -191,7 +191,7 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                     chatHistoryService.update(history);
 
                     Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_JOIN,NutMap.NEW().addv("servicer",servicer.getAttribute(Dankefu.SERVICERATTR)).addv("history",history).addv("time",Times.format("MM-dd HH:mm",new Date()))));
-                    Tio.send(servicer,TioWebSocketUtils.makeWsResponse(Type.SERVICER_RESP_JOIN,NutMap.NEW().addv(Dankefu.CLIENTCURRSESSIONATTR,history)));
+                    Tio.send(servicer,TioWebSocketUtils.makeWsResponse(Type.SERVICER_RESP_JOIN,NutMap.NEW().addv(Dankefu.CLIENTCURRSESSIONATTR,chat)));
                 }
             }
         }

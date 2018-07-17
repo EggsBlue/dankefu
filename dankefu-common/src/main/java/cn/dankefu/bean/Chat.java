@@ -40,12 +40,10 @@ public class Chat extends BasePojo{
     @Comment("来源:ClientSourceEnum")
     private String source;
 
-
     @Column
     @ColDefine(type = ColType.VARCHAR,width = 255)
     @Comment("浏览器代理内容")
     private String userAgent;
-
 
     @Column
     @ColDefine(type = ColType.VARCHAR, width = 32)
@@ -55,7 +53,7 @@ public class Chat extends BasePojo{
     @Column
     @ColDefine(type = ColType.INT)
     @Comment("来访次数")
-    private int chatCount;
+    private Integer chatCount;
 
     @Column
     @ColDefine(type = ColType.DATETIME)
@@ -81,6 +79,8 @@ public class Chat extends BasePojo{
 
 
     private Chat_history curr_session;
+
+    private Customer customer;
 
     private String status;
 
@@ -125,11 +125,11 @@ public class Chat extends BasePojo{
         this.ip = ip;
     }
 
-    public int getChatCount() {
+    public Integer getChatCount() {
         return chatCount;
     }
 
-    public void setChatCount(int chatCount) {
+    public void setChatCount(Integer chatCount) {
         this.chatCount = chatCount;
     }
 
@@ -219,5 +219,13 @@ public class Chat extends BasePojo{
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
