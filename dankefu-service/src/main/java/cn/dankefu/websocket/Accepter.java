@@ -4,10 +4,7 @@ import cn.dankefu.Dankefu;
 import cn.dankefu.WaitingQueue;
 import cn.dankefu.bean.*;
 import cn.dankefu.packet.SocketMsg;
-import cn.dankefu.service.ChannelWebService;
-import cn.dankefu.service.ChatHistoryService;
-import cn.dankefu.service.ChatService;
-import cn.dankefu.service.SysUserService;
+import cn.dankefu.service.*;
 import cn.dankefu.utils.TioWebSocketUtils;
 import cn.dankefu.websocket.handler.*;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -50,6 +47,8 @@ public class Accepter implements IWsMsgHandler {
 	@Inject
     private ChannelWebService channelWebService;
 
+	@Inject
+	private ChatRecordsService chatRecordsService;
 
 
 	@Inject
@@ -123,6 +122,8 @@ public class Accepter implements IWsMsgHandler {
             channelContext.setAttribute(Dankefu.SERVICERATTR,servicer);
             Tio.bindUser(channelContext,service_id);
             Tio.bindGroup(channelContext, Dankefu.SERVICERGROUPNAME);
+
+            flushQueue(channelContext);
         }
 
 		return httpResponse;
@@ -174,17 +175,25 @@ public class Accepter implements IWsMsgHandler {
 				}
 			}
 
-            //有人离开，排队的人向前一步走
-            ChannelContext poolContext = waitingQueue.pool();
-            if(Lang.isNotEmpty(poolContext) &&  poolContext!=channelContext){
-                reqServiceHandler.attemper(poolContext);
-            }
+            flushQueue(channelContext);
 
             log.debugf("有人下线，当前队列排队数量:%s个",waitingQueue.getWaitCount());
 		}
 
 		return null;
 	}
+
+    /**
+     * 刷新队列
+     * @param channelContext
+     */
+	void flushQueue(ChannelContext channelContext){
+        ChannelContext poolContext = waitingQueue.pool();
+        if(Lang.isNotEmpty(poolContext) &&  poolContext!=channelContext){
+            reqServiceHandler.attemper(poolContext);
+        }
+    }
+
 
 	@Override
 	public Object onText(WsRequest wsRequest, String text, ChannelContext channelContext) throws Exception {

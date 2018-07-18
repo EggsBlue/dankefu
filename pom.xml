@@ -45,6 +45,7 @@
                 <artifactId>tio-core</artifactId>
                 <version>${tio-version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -80,6 +81,11 @@
         <dependency>
             <groupId>org.t-io</groupId>
             <artifactId>tio-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>1.4</version>
         </dependency>
     </dependencies>
     <build>

@@ -13,6 +13,9 @@
             height: 800px;
             overflow-y: auto;
         }
+        .centre-header-hide{
+            display: none;
+        }
     </style>
 </head>
 
@@ -61,13 +64,13 @@
             <div class="grid-content bg-purple-light" id="centre">
                 <el-container>
                     <el-header id="centre-header">
-                        <div class="centre-header-item">
-                            <p>正在与<span>[蛋蛋]</span>聊天</p>
+                        <div :class="[{'centre-header-hide':current_chat_name==''},'centre-header-item']">
+                            <p>正在与<span>[{{current_chat_name}}]</span>聊天</p>
                             <img class="centre-header-req" src="${base}/assets/img/service/chat/heart.png" width="24"
                                  height="24" alt="邀请评价">
                             <div class="centre-header-source-box">
-                                <img src="${base}/assets/img/service/chat/mobile_icon2.png" width="32" height="32"
-                                     alt="">
+                                <img :src="current_chat_source == 'web_mobile'?web_mobile_icon:current_chat_source == 'web_pc'?web_pc_icon:''" width="32" height="32"
+                                     :alt="current_chat_source == 'web_mobile'?'手机网站':current_chat_source == 'web_pc'?'电脑网站':'其他'">
                             </div>
                         </div>
                     </el-header>
@@ -350,9 +353,11 @@
             chatInfo: '来访信息',
             chatHistory: '历史来访',
             curOnline: '3',
-            total: 1,
+            total: 0,
             is_lock_active: true,
             is_online: true,
+            current_chat_name:'',
+            current_chat_source:'',
             height_style: {
                 height: '800px',
             },
@@ -368,14 +373,14 @@
                 'margin-right': '15px',
                 'margin-top': '18px'
             },
-            mobileHeadImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
+            mobileHeadImg: '',
             web_mobile_icon: '${base}/assets/img/service/chat/mobile_icon2.png',
             web_pc_icon: '${base}/assets/img/service/chat/pc_icon2.png',
             onlineList: [
                 // {
                 //   id: '1',
                 //   name: '测试1',
-                //   headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
+                //   headImg: '',
                 //   source: 'mobile_web',
                 //   status: 'online'
                 // }
@@ -384,7 +389,7 @@
                 // {
                 //   id: '5',
                 //   name: '测试3',
-                //   headImg: 'http://ziker-agent.yun.pingan.com/assets/images/icon_head_m.51265829.png',
+                //   headImg: '',
                 //   source: 'mobile_web',
                 //   status: 'online'
                 // }
@@ -431,6 +436,8 @@
                 })
                 Vue.set(item, 'lock_active', true)
 
+                app.current_chat_name = item.name;
+                app.current_chat_source = item.source;
                 //刷新客户信息
                 if(item.customer!=null && item.customer!=undefined){
                     app.customer = item.customer;
@@ -466,30 +473,33 @@
             },
             saveCustomer:function(){
                 console.log(app.customer);
-                $.post('${base}/customer/save',JSON.stringify(app.customer),function(resp){
-                    console.log(resp);
-                    if(resp.code == 0){
-                        app.customer = resp.data;
-                        var flag = true;
-                        app.onlineList = app.onlineList.filter(function (item) {
-                            if(item.id == resp.data.chatId){
-                               item.customer = resp.data;
-                                flag = false;
-                            }
-                            return item;
-                        })
-                        if(flag){
-                            app.historyList = app.historyList.filter(function (item) {
+                if(app.customer.chatId!=''){
+                    $.post('${base}/customer/save',JSON.stringify(app.customer),function(resp){
+                        console.log(resp);
+                        if(resp.code == 0){
+                            app.customer = resp.data;
+                            var flag = true;
+                            app.onlineList = app.onlineList.filter(function (item) {
                                 if(item.id == resp.data.chatId){
                                     item.customer = resp.data;
                                     flag = false;
                                 }
                                 return item;
                             })
+                            if(flag){
+                                app.historyList = app.historyList.filter(function (item) {
+                                    if(item.id == resp.data.chatId){
+                                        item.customer = resp.data;
+                                        flag = false;
+                                    }
+                                    return item;
+                                })
+                            }
+                            layer.msg("保存成功");
                         }
-                        layer.msg("保存成功");
-                    }
-                });
+                    });
+                }
+
             }
         },
         computed: {
@@ -502,7 +512,6 @@
             },
             customer:{
                 handler(val, oldVal){
-                    console.log(app.customer);
                     // $.post('${base}/customer/save',JSON.stringify(app.customer),function(resp){
                     //     console.log(resp);
                     //     if(resp.code == 0){
@@ -517,30 +526,35 @@
             $.post('${base}/chat/init', {}, function (resp) {
                 console.log(resp);
                 var data = resp.data;
-                app.onlineList = data.onlines;
-                app.onlineList = app.onlineList.filter(function (item) {
-                    item = Object.assign({}, item, {
-                        lock_active: false
-                    })
-                    return item;
-                })
-
-                app.onlineList[0] = Object.assign({}, app.onlineList[0], {
-                    lock_active: true
-                })
-
-                if(app.onlineList[0].customer!=null && app.onlineList[0].customer!=undefined){
-                    app.customer = app.onlineList[0].customer;
-                }else{
-                    app.customer = Object.assign({}, this.customer, {
-                        chatId:  item.id,
-                        unitId:item.unitId,
-                        source:item.source
+                if(data.onlines){
+                    app.onlineList = data.onlines;
+                    app.onlineList = app.onlineList.filter(function (item) {
+                        item = Object.assign({}, item, {
+                            lock_active: false
+                        })
+                        return item;
                     })
 
+                    app.onlineList[0] = Object.assign({}, app.onlineList[0], {
+                        lock_active: true
+                    })
+                    app.current_chat_name = app.onlineList[0].name;
+                    app.current_chat_source = app.onlineList[0].source;
+
+                    if(app.onlineList[0].customer!=null && app.onlineList[0].customer!=undefined){
+                        app.customer = app.onlineList[0].customer;
+                    }else{
+                        app.customer = Object.assign({}, this.customer, {
+                            chatId:  app.onlineList[0].id,
+                            unitId:  app.onlineList[0].unitId,
+                            source:  app.onlineList[0].source
+                        })
+
+                    }
                 }
-
-                app.historyList = data.historys;
+                if(data.historys!=undefined){
+                    app.historyList = data.historys;
+                }
                 app.total = data.me.maxServiceCount;
 
             });

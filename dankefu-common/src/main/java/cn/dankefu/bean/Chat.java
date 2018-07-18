@@ -60,7 +60,6 @@ public class Chat extends BasePojo{
     @Comment("最后一次访问时间")
     private Date lastTime;
 
-
     @Column
     @ColDefine(type = ColType.DATETIME)
     @Comment("最后一次结束时间")

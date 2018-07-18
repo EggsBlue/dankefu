@@ -59,10 +59,13 @@ public class ChatController extends Handler {
     @Ok("json:{locked:'password|salt|disable|loginIp'}")
     public Result init(@Attr("uid")String uid){
         NutMap data = NutMap.NEW();
+        Sys_user user = sysUserService.fetch(uid);
         //访客列表
         List<Chat> list = chatService.getChatList(uid);
+        data.setv("me",user);
+
         if(list==null || list.size() == 0){
-            return success();
+            return success().setData(data);
         }
 
         List<Chat> onlines = new LinkedList<>();
@@ -82,8 +85,7 @@ public class ChatController extends Handler {
         });
         data.setv("onlines",onlines).setv("historys",historys);
 
-        Sys_user user = sysUserService.fetch(uid);
-        data.setv("me",user);
+
         return success().setData(data);
     }
 

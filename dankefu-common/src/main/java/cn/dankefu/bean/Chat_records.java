@@ -10,7 +10,7 @@ import java.util.Objects;
  * author: 蛋蛋的忧伤
  * date: 2018/5/17 0017 19:35
  */
-@Table("dankefu_chat_records")
+@Table("dankefu_chat_records${month}")
 public class Chat_records extends BasePojo{
     private static final long serialVersionUID = 1L;
     @Column
@@ -26,9 +26,28 @@ public class Chat_records extends BasePojo{
     private String chatId;
 
     @Column
+    @ColDefine(type = ColType.VARCHAR, width = 32)
+    @Comment("会话记录编号")
+    private String chatHistoryId;
+
+    @Column
+    @ColDefine(type = ColType.VARCHAR, width = 32)
+    @Comment("当前客服人员")
+    private String sys_user_id;
+
+
+
+    @Column
     @ColDefine(type = ColType.VARCHAR, width = 10)
-    @Comment("消息类型:ChatRecordsMsgTypeEnum")
+    @Comment("消息类型:ChatRecordTypeEnum")
+    private String recordType;
+
+
+    @Column
+    @ColDefine(type = ColType.VARCHAR, width = 10)
+    @Comment("消息内容类型:ChatRecordsMsgTypeEnum")
     private String msgType;
+
 
     @Column
     @ColDefine(type = ColType.VARCHAR, width = 32)
@@ -152,5 +171,30 @@ public class Chat_records extends BasePojo{
     public int hashCode() {
 
         return Objects.hash(id, chatId, msgType, display, prevTime, msgFrom, msgTo, content, source);
+    }
+
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
+    }
+
+    public String getChatHistoryId() {
+        return chatHistoryId;
+    }
+
+    public void setChatHistoryId(String chatHistoryId) {
+        this.chatHistoryId = chatHistoryId;
+    }
+
+    public String getSys_user_id() {
+        return sys_user_id;
+    }
+
+    public void setSys_user_id(String sys_user_id) {
+        this.sys_user_id = sys_user_id;
     }
 }

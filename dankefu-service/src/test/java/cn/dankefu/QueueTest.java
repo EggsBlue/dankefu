@@ -1,4 +1,4 @@
-package cn.dankefu.lang;
+package cn.dankefu;
 
 import org.junit.Test;
 import org.nutz.lang.Lang;

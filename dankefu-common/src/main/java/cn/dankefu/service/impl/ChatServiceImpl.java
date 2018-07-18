@@ -7,6 +7,7 @@ import cn.dankefu.enums.ClientSourceEnum;
 import cn.dankefu.service.BaseServiceImpl;
 import cn.dankefu.service.ChatService;
 import cn.dankefu.service.SysUnitService;
+import cn.dankefu.utils.Ip2RegionUtil;
 import org.nutz.dao.Dao;
 import org.nutz.dao.Sqls;
 import org.nutz.dao.sql.Sql;
@@ -40,9 +41,6 @@ public class ChatServiceImpl extends BaseServiceImpl<Chat> implements ChatServic
     @Inject
     private SysUnitService sysUnitService;
 
-
-
-
     @Override
     public Chat insert(String unitId,ClientSourceEnum sourceEnum,HttpServletRequest request) {
         Chat chat = new Chat();
@@ -54,6 +52,7 @@ public class ChatServiceImpl extends BaseServiceImpl<Chat> implements ChatServic
         chat.setLastTime(new Date());
         chat.setRegion("");
         chat.setSource(sourceEnum.getSource());
+        chat.setRegion(Ip2RegionUtil.getIp(Lang.getIP(request),1));
         fastInsert(chat);
         return chat;
     }

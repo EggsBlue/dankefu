@@ -25,7 +25,6 @@ public class Settings extends BasePojo{
     @Comment("单位编号")
     private String unitId;
 
-
     @Column
     @Comment("键")
     @ColDefine(type = ColType.VARCHAR, width = 120)
@@ -35,6 +34,11 @@ public class Settings extends BasePojo{
     @Comment("值")
     @ColDefine(type = ColType.VARCHAR, width = 255)
     private String sVal;
+
+    @Column
+    @ColDefine(type = ColType.VARCHAR, width = 100)
+    @Comment("描述")
+    private String note;
 
 
     public String getId() {
@@ -84,6 +88,14 @@ public class Settings extends BasePojo{
     public int hashCode() {
 
         return Objects.hash(id, unitId, sKey, sVal);
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }
 
