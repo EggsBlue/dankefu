@@ -20,7 +20,7 @@ public interface ChatRecordsService extends BaseService<Chat_records> {
     Chat_records insert(Chat_records record,String tableName);
 
     Chat_records insert(String chatId,String chatHistoryId,String recordType,String msgType,String display,Date prevTime,
-                        String msgForm,String msgTo,String content,String source,String sys_user_id);
+                        String msgForm,String msgTo,String content,String source,String sys_user_id,String unitId);
 
     /**
      * 分页查询

@@ -36,9 +36,23 @@ public interface Type {
     /**
      * 邀请留言
      */
-    byte CLIENT_RESP_INVITINGMESSAGE = 6;
+     byte CLIENT_RESP_INVITINGMESSAGE = 6;
+
+    /**
+     * 对话客服已下线
+     */
+    byte CLIENT_RESP_SERVICEROFLINE = 7;
+
+    /**
+     * 收到消息
+     */
+    byte CLIENT_RESP_RECEIVEMSG = 8;
+
 
     // ===============客户端交互消息规格=====================
+
+
+
 
 
     // ===============客服端交互消息规格=====================
@@ -46,10 +60,16 @@ public interface Type {
      * 有访客加入
      */
     byte SERVICER_RESP_JOIN = 101;
+
     /**
      * 访客离开
      */
     byte SERVICER_RESP_LEAVE = 102;
 
+    /**
+     * 收到消息
+     */
+    byte SERVICER_RESP_RECEIVEMSG = 103;
 
+    // ===============客服端交互消息规格=====================
 }

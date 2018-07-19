@@ -157,10 +157,11 @@ public class Accepter implements IWsMsgHandler {
 			//TODO 通知当前服务的访客
 		}else{
 			Chat chat =(Chat) channelContext.getAttribute("chat");
-            //Chat_history curr_sess =(Chat_history) channelContext.getAttribute("curr_session");
+            Chat_history curr_sess =(Chat_history) channelContext.getAttribute("curr_session");
 
-            if(chat!=null){
+            if(Lang.isNotEmpty(chat)){
 				chat.setStatus("offline");
+				chat.setLastTime(new Date());
 				chatService.update(chat);
 				log.debugf("访客【%s】下线了",chat.getName());
 
@@ -173,6 +174,11 @@ public class Accepter implements IWsMsgHandler {
 						Tio.send(channel,TioWebSocketUtils.makeWsResponse(Type.SERVICER_RESP_LEAVE,NutMap.NEW().addv("time",Times.format("MM-dd HH:mm",new Date())).addv("curr_session",chat)));
 					}
 				}
+			}
+
+			if(Lang.isNotEmpty(curr_sess)){
+            	curr_sess.setEndTime(new Date());
+            	chatHistoryService.update(curr_sess);
 			}
 
             flushQueue(channelContext);

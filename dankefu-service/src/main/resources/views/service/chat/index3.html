@@ -79,99 +79,121 @@
                         <div id="centre-body-chatbox">
                             <div id="wrap">
                                 <ul id="centre-body-chat-list">
-                                    <li class="chatmsg">
-                                        <div class="showtime">2018-06-06 23:23:</div>
-                                        <div class="img-left" style="">
-                                            <img class="my-circle  se_pic"
-                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
-                                                 height="50px">
+
+
+                                    <li class="chatmsg" v-for="item in chat_logs.records">
+                                        <div class="showtime">{{item.prevTime}}</div>
+                                        <div :class="[item.msgFrom == chat_logs.chatId?'img-left':'img-right']" style="">
+                                            <img v-if="item.msgFrom == chat_logs.chatId" class="my-circle  se_pic"
+                                            :src="item.source == 'web_mobile'?web_mobile_icon:item.source == 'web_pc'?web_pc_icon:''" width="50px"
+                                            height="50px">
+                                            <img v-else class="my-circle  se_pic"
+                                            :src="servicer_headimg" width="50px"
+                                            height="50px">
                                         </div>
-                                        <div class="outer-left">
-                                            <div class="customer">
-                                                <pre>写页面是件苦逼的事情</pre>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="chatmsg">
-                                        <div class="showtime"></div>
-                                        <div class="img-left" style="">
-                                            <img class="my-circle  se_pic"
-                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
-                                                 height="50px">
-                                        </div>
-                                        <div class="outer-left">
-                                            <div class="customer">
-                                                <pre>前端套路深,我要回后端...</pre>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="chatmsg">
-                                        <div class="showtime"></div>
-                                        <div class="img-right" style="">
-                                            <img class="my-circle  se_pic"
-                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
-                                                 height="50px">
-                                        </div>
-                                        <div class="outer-right">
-                                            <div class="service">
-                                                <pre>慢慢就浅了</pre>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="chatmsg">
-                                        <div class="showtime"></div>
-                                        <div class="img-left" style="">
-                                            <img class="my-circle  se_pic"
-                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
-                                                 height="50px">
-                                        </div>
-                                        <div class="outer-left">
-                                            <div class="customer">
-                                                <pre>这页面费了好多事</pre>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="chatmsg">
-                                        <div class="showtime"></div>
-                                        <div class="img-right" style="">
-                                            <img class="my-circle  se_pic"
-                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
-                                                 height="50px">
-                                        </div>
-                                        <div class="outer-right">
-                                            <div class="service">
-                                                <pre>先写好这一版再说....</pre>
+                                        <div :class="[item.msgFrom == chat_logs.chatId?'outer-left':'outer-right']">
+                                            <div :class="[item.msgFrom == chat_logs.chatId?'customer':'service']  ">
+                                                <pre>{{item.content}}</pre>
                                             </div>
                                         </div>
                                     </li>
 
-                                    <li class="chatmsg">
-                                        <div class="showtime"></div>
-                                        <div class="img-right" style="">
-                                            <img class="my-circle  se_pic"
-                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
-                                                 height="50px">
-                                        </div>
-                                        <div class="outer-right">
-                                            <div class="service">
-                                                <pre>Emmmmm......</pre>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    <!--<li class="chatmsg" v-for="item in chat_logs.records">-->
+                                        <!--<div class="showtime">{{item.prevTime}}</div>-->
+                                        <!--<div :class="{img-left:item.msgFrom == chat_logs.chatId,img-right:item.msgFrom != chat_logs.chatId }" style="">-->
+                                            <!--<img v-if="item.msgFrom == chat_logs.chatId" class="my-circle  se_pic"-->
+                                                 <!--:src="item.source == 'web_mobile'?web_mobile_icon:item.source == 'web_pc'?web_pc_icon:''" width="50px"-->
+                                                 <!--height="50px">-->
+                                            <!--<img v-else class="my-circle  se_pic"-->
+                                                 <!--:src="item.source == 'web_mobile'?web_mobile_icon:item.source == 'web_pc'?web_pc_icon:''" width="50px"-->
+                                                 <!--height="50px">-->
+                                        <!--</div>-->
+                                        <!--<div :class="{outer-left:item.msgFrom == chat_logs.chatId,outer-right:item.msgFrom != chat_logs.chatId }">-->
+                                            <!--<div class="customer">-->
+                                                <!--<pre>{{item.content}}</pre>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li class="chatmsg">-->
+                                        <!--<div class="showtime"></div>-->
+                                        <!--<div class="img-left" style="">-->
+                                            <!--<img class="my-circle  se_pic"-->
+                                                 <!--src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"-->
+                                                 <!--height="50px">-->
+                                        <!--</div>-->
+                                        <!--<div class="outer-left">-->
+                                            <!--<div class="customer">-->
+                                                <!--<pre>前端套路深,我要回后端...</pre>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li class="chatmsg">-->
+                                        <!--<div class="showtime"></div>-->
+                                        <!--<div class="img-right" style="">-->
+                                            <!--<img class="my-circle  se_pic"-->
+                                                 <!--src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"-->
+                                                 <!--height="50px">-->
+                                        <!--</div>-->
+                                        <!--<div class="outer-right">-->
+                                            <!--<div class="service">-->
+                                                <!--<pre>慢慢就浅了</pre>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li class="chatmsg">-->
+                                        <!--<div class="showtime"></div>-->
+                                        <!--<div class="img-left" style="">-->
+                                            <!--<img class="my-circle  se_pic"-->
+                                                 <!--src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"-->
+                                                 <!--height="50px">-->
+                                        <!--</div>-->
+                                        <!--<div class="outer-left">-->
+                                            <!--<div class="customer">-->
+                                                <!--<pre>这页面费了好多事</pre>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li class="chatmsg">-->
+                                        <!--<div class="showtime"></div>-->
+                                        <!--<div class="img-right" style="">-->
+                                            <!--<img class="my-circle  se_pic"-->
+                                                 <!--src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"-->
+                                                 <!--height="50px">-->
+                                        <!--</div>-->
+                                        <!--<div class="outer-right">-->
+                                            <!--<div class="service">-->
+                                                <!--<pre>先写好这一版再说....</pre>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
 
-                                    <li class="chatmsg">
-                                        <div class="showtime"></div>
-                                        <div class="img-right" style="">
-                                            <img class="my-circle  se_pic"
-                                                 src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"
-                                                 height="50px">
-                                        </div>
-                                        <div class="outer-right">
-                                            <div class="service">
-                                                <pre>截图留念~</pre>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    <!--<li class="chatmsg">-->
+                                        <!--<div class="showtime"></div>-->
+                                        <!--<div class="img-right" style="">-->
+                                            <!--<img class="my-circle  se_pic"-->
+                                                 <!--src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"-->
+                                                 <!--height="50px">-->
+                                        <!--</div>-->
+                                        <!--<div class="outer-right">-->
+                                            <!--<div class="service">-->
+                                                <!--<pre>Emmmmm......</pre>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+
+                                    <!--<li class="chatmsg">-->
+                                        <!--<div class="showtime"></div>-->
+                                        <!--<div class="img-right" style="">-->
+                                            <!--<img class="my-circle  se_pic"-->
+                                                 <!--src="https://www.wolive.cc/assets/upload/0.jpg" width="50px"-->
+                                                 <!--height="50px">-->
+                                        <!--</div>-->
+                                        <!--<div class="outer-right">-->
+                                            <!--<div class="service">-->
+                                                <!--<pre>截图留念~</pre>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
 
 
                                 </ul>
@@ -358,6 +380,7 @@
             is_online: true,
             current_chat_name:'',
             current_chat_source:'',
+            servicer_headimg:'${user.icon!}',
             height_style: {
                 height: '800px',
             },
@@ -414,6 +437,13 @@
                 profession: '',
                 source:'',
                 platform:''
+            },
+            chat_logs:{
+                pageNo:0,
+                pageSize:20,
+                month:'',
+                chatId:'',
+                records:[]
             }
         },
         methods: {
@@ -424,46 +454,49 @@
             },
             queryHistoryLog: function (item, e1) {
                 // console.log(e1);
-                console.log(item);
-               //切换效果
-                app.onlineList = app.onlineList.filter(function (i) {
-                    Vue.set(i, 'lock_active', false)
-                    return i;
-                })
-                app.historyList = app.historyList.filter(function (i) {
-                    Vue.set(i, 'lock_active', false)
-                    return i;
-                })
-                Vue.set(item, 'lock_active', true)
+                // console.log(item);
+                // //切换效果
+                // app.onlineList = app.onlineList.filter(function (i) {
+                //     Vue.set(i, 'lock_active', false)
+                //     return i;
+                // })
+                // app.historyList = app.historyList.filter(function (i) {
+                //     Vue.set(i, 'lock_active', false)
+                //     return i;
+                // })
+                // Vue.set(item, 'lock_active', true)
+                //
+                // app.current_chat_name = item.name;
+                // app.current_chat_source = item.source;
+                //
+                // //刷新客户信息
+                // if(item.customer!=null && item.customer!=undefined){
+                //     app.customer = item.customer;
+                // }else{
+                //     app.customer = Object.assign({}, app.customer, {
+                //         chatId:  item.id,
+                //         unitId:item.unitId,
+                //         source:item.source,
+                //         id:'',
+                //         name: '',
+                //         remark: '',
+                //         gender: '',
+                //         phone: '',
+                //         email: '',
+                //         age: '',
+                //         birthday: '',
+                //         cardType: '',
+                //         card: '',
+                //         province: '',
+                //         city: '',
+                //         region: '',
+                //         address: '',
+                //         profession: '',
+                //         platform:''
+                //     });
+                // }
+                switchChat(item);
 
-                app.current_chat_name = item.name;
-                app.current_chat_source = item.source;
-                //刷新客户信息
-                if(item.customer!=null && item.customer!=undefined){
-                    app.customer = item.customer;
-                }else{
-                    app.customer = Object.assign({}, app.customer, {
-                        chatId:  item.id,
-                        unitId:item.unitId,
-                        source:item.source,
-                        id:'',
-                        name: '',
-                        remark: '',
-                        gender: '',
-                        phone: '',
-                        email: '',
-                        age: '',
-                        birthday: '',
-                        cardType: '',
-                        card: '',
-                        province: '',
-                        city: '',
-                        region: '',
-                        address: '',
-                        profession: '',
-                        platform:''
-                    })
-                }
             },
             item_overShow: function (e1) {
                 $(e1.currentTarget).addClass('active');
@@ -529,34 +562,36 @@
                 if(data.onlines){
                     app.onlineList = data.onlines;
                     app.onlineList = app.onlineList.filter(function (item) {
-                        item = Object.assign({}, item, {
-                            lock_active: false
-                        })
+                        Vue.set(item, 'lock_active', true);
+                        Vue.set(item, 'chat_logs', {
+                            pageNo:0,
+                            pageSize:20,
+                            month:'',
+                            chatId:item.id,
+                            records:[]
+                        });
                         return item;
                     })
-
-                    app.onlineList[0] = Object.assign({}, app.onlineList[0], {
-                        lock_active: true
-                    })
-                    app.current_chat_name = app.onlineList[0].name;
-                    app.current_chat_source = app.onlineList[0].source;
-
-                    if(app.onlineList[0].customer!=null && app.onlineList[0].customer!=undefined){
-                        app.customer = app.onlineList[0].customer;
-                    }else{
-                        app.customer = Object.assign({}, this.customer, {
-                            chatId:  app.onlineList[0].id,
-                            unitId:  app.onlineList[0].unitId,
-                            source:  app.onlineList[0].source
-                        })
-
+                    console.log( app.onlineList);
+                    if(app.onlineList[0]){
+                        switchChat(app.onlineList[0])
                     }
                 }
                 if(data.historys!=undefined){
                     app.historyList = data.historys;
+                    app.historyList = app.historyList.filter(function (item) {
+                        Vue.set(item, 'lock_active', true);
+                        Vue.set(item, 'chat_logs', {
+                            pageNo:0,
+                            pageSize:20,
+                            month:'',
+                            chatId:item.id,
+                            records:[]
+                        });
+                        return item;
+                    });
                 }
                 app.total = data.me.maxServiceCount;
-
             });
             this.height_style.height = window.innerHeight + "px";
         }
@@ -621,6 +656,81 @@
 
         end_time = new Date().getTime();
         console.log("process done :" + (end_time - start_time) + " ms");
+    }
+
+    /**
+     * 切换会话
+     * @param 当前选中的会话对象
+     */
+    function switchChat(item){
+        //切换效果
+        app.onlineList = app.onlineList.filter(function (i) {
+            Vue.set(i, 'lock_active', false)
+            return i;
+        })
+        app.historyList = app.historyList.filter(function (i) {
+            Vue.set(i, 'lock_active', false)
+            return i;
+        })
+        Vue.set(item, 'lock_active', true)
+
+        app.current_chat_name = item.name;
+        app.current_chat_source = item.source;
+
+        //刷新客户信息
+        if(item.customer!=null && item.customer!=undefined){
+            app.customer = item.customer;
+        }else{
+            app.customer = Object.assign({}, app.customer, {
+                chatId:  item.id,
+                unitId:item.unitId,
+                source:item.source,
+                id:'',
+                name: '',
+                remark: '',
+                gender: '',
+                phone: '',
+                email: '',
+                age: '',
+                birthday: '',
+                cardType: '',
+                card: '',
+                province: '',
+                city: '',
+                region: '',
+                address: '',
+                profession: '',
+                platform:''
+            });
+        }
+
+        //加载聊天记录
+        var res = item.chat_logs;
+        console.log(item);
+        if(res.records.length == 0){
+            queryRecords(item);
+        }
+        app.chat_logs = res;
+    }
+
+
+    /**
+     * 加载下一页聊天记录
+     * @param item 需要查询的会话对象
+     */
+    function queryRecords(item){
+        var logs = item.chat_logs;
+        $.post('${base}/chat/records/query',{chatId:item.id,pageNo:logs.pageNo+1,pageSize:logs.pageSize,month:logs.month},function(res){
+            console.log(res);
+            if(res.code == 0){
+                logs.pageNo = res.data.pageNo;
+                logs.pageSize = res.data.pageSize;
+                logs.mongth = res.data.tableName;
+                logs.records = res.data.list;
+            }else{
+                alert("错误");
+            }
+        });
     }
 
 

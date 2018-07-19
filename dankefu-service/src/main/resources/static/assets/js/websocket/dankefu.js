@@ -3,8 +3,6 @@ var dankefu={
         resttime:function(data){
             console.log("resttime process...");
             console.log(data);
-
-
         },
         waiting:function(data){
             console.log("waiting process...");

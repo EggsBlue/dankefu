@@ -48,10 +48,9 @@ public class ChatController extends Handler {
 
     @At("")
     @Ok("beetl:/service/chat/index3.html")
-    public void home(HttpServletRequest request){
-
-
-
+    public void home(@Attr("uid")String uid, HttpServletRequest request){
+        Sys_user user = sysUserService.fetch(uid);
+        request.setAttribute("user",user);
     }
 
 

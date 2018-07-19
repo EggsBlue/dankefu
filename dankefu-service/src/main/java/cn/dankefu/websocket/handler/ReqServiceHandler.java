@@ -29,7 +29,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 请求服务，客服调度、分配
- *
  * @Author: 蛋蛋
  * @Time:2017/11/28 10:47
  */
@@ -54,7 +53,6 @@ public class ReqServiceHandler implements MsgHandlerInterface {
 
     @Inject
     private ChatRecordsService chatRecordsService;
-
 
     @Inject
     private WaitingQueue waitingQueue;

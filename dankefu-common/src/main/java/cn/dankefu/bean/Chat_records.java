@@ -36,7 +36,6 @@ public class Chat_records extends BasePojo{
     private String sys_user_id;
 
 
-
     @Column
     @ColDefine(type = ColType.VARCHAR, width = 10)
     @Comment("消息类型:ChatRecordTypeEnum")
@@ -78,6 +77,12 @@ public class Chat_records extends BasePojo{
     @ColDefine(type = ColType.VARCHAR,width = 10)
     @Comment("消息来源:ClientSourceEnum")
     private String source;
+
+    @Column
+    @ColDefine(type = ColType.VARCHAR,width = 32)
+    @Comment("当前单位编号")
+    private String sysUnitId;
+
 
     public String getId() {
         return id;
@@ -196,5 +201,13 @@ public class Chat_records extends BasePojo{
 
     public void setSys_user_id(String sys_user_id) {
         this.sys_user_id = sys_user_id;
+    }
+
+    public String getSysUnitId() {
+        return sysUnitId;
+    }
+
+    public void setSysUnitId(String sysUnitId) {
+        this.sysUnitId = sysUnitId;
     }
 }

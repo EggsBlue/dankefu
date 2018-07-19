@@ -62,7 +62,7 @@ public class ChatRecordsServiceImpl extends BaseServiceImpl<Chat_records> implem
     }
 
     @Override
-    public Chat_records insert(String chatId, String chatHistoryId, String recordType, String msgType, String display, Date prevTime, String msgForm, String msgTo, String content, String source,String sys_user_id) {
+    public Chat_records insert(String chatId, String chatHistoryId, String recordType, String msgType, String display, Date prevTime, String msgForm, String msgTo, String content, String source,String sys_user_id,String unitId) {
         Chat_records record = new Chat_records();
         record.setChatId(chatId);
         record.setChatHistoryId(chatHistoryId);
@@ -75,6 +75,7 @@ public class ChatRecordsServiceImpl extends BaseServiceImpl<Chat_records> implem
         record.setContent(content);
         record.setSource(source);
         record.setSys_user_id(sys_user_id);
+        record.setSysUnitId(unitId);
         return insert(record,"");
     }
 
@@ -105,11 +106,12 @@ public class ChatRecordsServiceImpl extends BaseServiceImpl<Chat_records> implem
 
                 tableName = Times.format("yyyyMM",tableNameCal.getTime());
                 TableName.set(tableName);
-                pageNo = 1;
-                p.setPageNumber(pageNo);
-                records = dao().query(Chat_records.class, cnd, p);
+                if(dao().exists(Chat_records.class)){
+                    pageNo = 1;
+                    p.setPageNumber(pageNo);
+                    records = dao().query(Chat_records.class, cnd, p);
+                }
             }
-
             data.setv("pageNo",pageNo).setv("pageSize",pageSize).setv("tableName",tableName).setv("list",records);
         } catch (ParseException e) {
             log.error(e);
