@@ -55,19 +55,30 @@ public class TransferMessageHandler implements MsgHandlerInterface {
             String prevTime = data.getString("prevTime");//展示方式
             String content = data.getString("content");//展示方式
             String unitId = data.getString("unitId");//单位id
+            String session_id = data.getString("session_id");//单位id
+            String source = data.getString("source");//单位id
+
 
             NutMap packet = NutMap.NEW();
-            packet.setv("chatHistoryId",history.getId());
-            packet.setv("chatId",chat.getId());
             packet.setv("content",content);
             packet.setv("msgTo",msgTo);
             packet.setv("msgType",msgType);
-            packet.setv("prevTime",prevTime);
+            packet.setv("prevTime",Strings.isBlank(prevTime)?" ":prevTime );
             packet.setv("recordType",recordType);
-            packet.setv("source",chat.getSource());
+            packet.setv("source",source);
             String userid = null;
 
+
+            //记录消息
+            Date dPrevTime = null;
+            if(Strings.isNotBlank(prevTime)){
+                dPrevTime = Times.parse("yyyyMMdd HH:mm:ss",prevTime);
+            }
+
+
             if(chat!=null){//客户端发送的消息
+                packet.setv("chatHistoryId",history.getId());
+                packet.setv("chatId",chat.getId());
                 Sys_user user = null;
                 if("robot".equals(msgTo)){
                     //找机器人的,机器人回复一下...
@@ -85,20 +96,24 @@ public class TransferMessageHandler implements MsgHandlerInterface {
                     }
                     userid = user.getId();
                 }
+
+                chatRecordsService.insert(chat.getId(),history.getId(),recordType,msgType, ChatRecordsDisplayEnum.normal.getType(),dPrevTime,chat.getId(),msgTo,content,chat.getSource(),userid,unitId );
+
             }else{//服务端发送的消息
+
+                packet.setv("chatHistoryId",session_id);
+                packet.setv("chatId",msgTo);
+
                 SetWithLock<ChannelContext> contexts = Tio.getChannelContextsByToken(WebSocketServer.GROUPCONTEXT, msgTo);
                 ChannelContext  client = TioWebSocketUtils.getInSetWithLock(contexts);
                 packet.setv("msgFrom",serviced.getId());
                 packet.setv("sys_user_id",serviced.getId());
                 Tio.send(client,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_RECEIVEMSG,packet));
                 userid = serviced.getId();
+
+                chatRecordsService.insert(msgTo,session_id,recordType,msgType, ChatRecordsDisplayEnum.normal.getType(),dPrevTime,serviced.getId(),msgTo,content,source,userid,unitId );
             }
-            //记录消息
-            Date dPrevTime = null;
-            if(Strings.isNotBlank(prevTime)){
-                dPrevTime = Times.parse("yyyyMMdd HH:mm:ss",prevTime);
-            }
-            chatRecordsService.insert(chat.getId(),history.getId(),recordType,msgType, ChatRecordsDisplayEnum.normal.getType(),dPrevTime,chat.getId(),msgTo,content,chat.getSource(),userid,unitId );
+
         }catch (Exception e){
             log.error(e);
         }

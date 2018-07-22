@@ -67,9 +67,14 @@ public interface Type {
     byte SERVICER_RESP_LEAVE = 102;
 
     /**
-     * 收到消息
+     * 发送消息
      */
-    byte SERVICER_RESP_RECEIVEMSG = 103;
+    byte SERVICER_REQ_RECEIVEMSG = 103;
+
+    /**
+     * 客服收到消息
+     */
+    byte SERVICER_RESP_RECEIVEMSG = 104;
 
     // ===============客服端交互消息规格=====================
 }

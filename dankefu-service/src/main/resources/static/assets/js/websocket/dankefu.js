@@ -7,7 +7,7 @@ var dankefu={
         waiting:function(data){
             console.log("waiting process...");
             console.log(data);
-            var waitingTpl = waiting.innerHTML,chatContent = $('#chatContent');
+            var waitingTpl = msg.innerHTML,chatContent = $('#chatContent');
             laytpl(waitingTpl).render(data, function(html){
                 $(chatContent).append( html );
             });
@@ -15,7 +15,7 @@ var dankefu={
         join:function(data){
             console.log("join process...");
             console.log(data);
-            var joinTpl = join.innerHTML,chatContent = $('#chatContent');
+            var joinTpl = msg.innerHTML,chatContent = $('#chatContent');
             laytpl(joinTpl).render(data, function(html){
                 $(chatContent).append( html );
             });
@@ -23,6 +23,40 @@ var dankefu={
         nooneservicer:function(data){
             console.log("nooneservicer process...");
             console.log(data);
+        },
+        receiveMsg:function(data){
+            console.log("receive process...");
+            var receiveTpl = msg.innerHTML,chatContent = $('#chatContent');
+            laytpl(receiveTpl).render(data, function(html){
+                $(chatContent).append( html );
+            });
+        },
+        sendPlain:function(){
+            var msg = $('#msgIn').val();
+            if($.trim(msg) == '' ){
+                layer.msg("请输入要发送的内容");
+                return;
+            }
+
+            var packet = {};
+            packet.action = type.S_REQ_RECEIVEMSG;
+            packet.msgFrom = guest_id;
+            packet.msgTo = app.current_chat.id;
+            packet.recordType = "chat";
+            packet.msgType = "text";
+            packet.prevTime = "";
+            packet.content = app.text_in;
+            packet.unitId = unitId;
+            packet.session_id = app.current_chat.curr_session.id;
+            packet.source = app.current_chat.source;
+            sendString(JSON.stringify(packet));
+            app.text_in = '';
+
+
+            app.chat_logs.records.push(packet);
+
+
+            $('#msgIn').val('');
         }
     },
     s_handlers:{

@@ -10,8 +10,9 @@ var type={
     C_RESP_RECEIVEMSG:"8" //收到消息
 
 
-    // 服务端消息交互规格
+    // 客服端消息交互规格
     ,S_RESP_JOIN:"101", //有访客加入
     S_RESP_LEAVE:"102", //访客离开
-    S_RESP_RECEIVEMSG:"103" //收到消息
+    S_REQ_RECEIVEMSG:"103", //发送消息,
+    S_RESP_RECEIVEMSG:"104" //收到消息
 }

@@ -203,13 +203,13 @@
                                 </div>
                                 <div class="msg-input">
                                     <div class="input-box">
-                      <textarea id="text_in" placeholder="请输入要发送的内容" class="edit-ipt"
+                      <textarea  v-model="text_in" id="text_in" placeholder="请输入要发送的内容" class="edit-ipt"
                                 style="overflow-y: auto; font-weight: normal; font-size: 14px; overflow-x: hidden; word-break: break-all; font-style: normal; outline: none;padding: 5px;border:none;"
                                 contenteditable="true" hidefocus="true" tabindex="0"></textarea>
                                     </div>
 
                                     <div class="msg-toolbar-footer">
-                                        <el-button type="primary" plain>发送</el-button>
+                                        <el-button @click="send_plain" type="primary" plain>发送</el-button>
                                         <!-- <a id="showinfo" style="position: absolute;right: 0;top: 0;width: 20%;height: 42px;background: #d41010;text-align: center; border-left: 1px solid #FFF;cursor: pointer;">
                                                      <i class="triangle" style="margin-top: 21px;"></i> -->
                                         </a>
@@ -365,6 +365,7 @@
     var laytpl;
     var start_time;
     var end_time;
+    var unitId = "${session.unitId!}";
     var app = new Vue({
         el: '#app',
         data: {
@@ -379,8 +380,10 @@
             is_lock_active: true,
             is_online: true,
             current_chat_name:'',
+            current_chat:{},
             current_chat_source:'',
             servicer_headimg:'${user.icon!}',
+            text_in:'',
             height_style: {
                 height: '800px',
             },
@@ -453,48 +456,6 @@
             tab2Click: function (tab, event) {
             },
             queryHistoryLog: function (item, e1) {
-                // console.log(e1);
-                // console.log(item);
-                // //切换效果
-                // app.onlineList = app.onlineList.filter(function (i) {
-                //     Vue.set(i, 'lock_active', false)
-                //     return i;
-                // })
-                // app.historyList = app.historyList.filter(function (i) {
-                //     Vue.set(i, 'lock_active', false)
-                //     return i;
-                // })
-                // Vue.set(item, 'lock_active', true)
-                //
-                // app.current_chat_name = item.name;
-                // app.current_chat_source = item.source;
-                //
-                // //刷新客户信息
-                // if(item.customer!=null && item.customer!=undefined){
-                //     app.customer = item.customer;
-                // }else{
-                //     app.customer = Object.assign({}, app.customer, {
-                //         chatId:  item.id,
-                //         unitId:item.unitId,
-                //         source:item.source,
-                //         id:'',
-                //         name: '',
-                //         remark: '',
-                //         gender: '',
-                //         phone: '',
-                //         email: '',
-                //         age: '',
-                //         birthday: '',
-                //         cardType: '',
-                //         card: '',
-                //         province: '',
-                //         city: '',
-                //         region: '',
-                //         address: '',
-                //         profession: '',
-                //         platform:''
-                //     });
-                // }
                 switchChat(item);
 
             },
@@ -532,6 +493,44 @@
                         }
                     });
                 }
+            },
+            send_plain:function(){
+                console.log(app.text_in);
+                if(app.text_in ==''){
+                    layer.msg("请先输入点内容");
+                    return;
+                }
+
+                var box = $('#wrap')[0];
+                console.log(box);
+
+
+                console.log(app.current_chat.id);
+                if( app.current_chat.id){
+                    var packet = {};
+                    packet.action = type.S_REQ_RECEIVEMSG;
+                    packet.msgFrom = '${uid!}';
+                    packet.msgTo = app.current_chat.id;
+                    packet.recordType = "chat";
+                    packet.msgType = "text";
+                    packet.prevTime = "";
+                    packet.content = app.text_in;
+                    packet.unitId = unitId;
+                    packet.session_id = app.current_chat.curr_session.id;
+                    packet.source = app.current_chat.source;
+                    sendString(JSON.stringify(packet));
+                    app.text_in = '';
+
+
+                    app.chat_logs.records.push(packet);
+                }
+
+                setTimeout(function(){
+                    box.scrollTop = box.scrollHeight;
+                },100)
+
+
+
 
             }
         },
@@ -631,13 +630,6 @@
             //处理消息
             handleMsg(event.data);
         }
-
-        $("[name=message]").keydown(function (event) {
-            event = document.all ? window.event : event;
-            if ((event.keyCode || event.which) == 13) {
-                alert("发送消息");
-            }
-        });
     });
 
     function handleMsg(msgStr) {
@@ -674,6 +666,7 @@
         })
         Vue.set(item, 'lock_active', true)
 
+        app.current_chat = item;
         app.current_chat_name = item.name;
         app.current_chat_source = item.source;
 
@@ -731,6 +724,11 @@
                 alert("错误");
             }
         });
+    }
+
+    function sendString(str){
+        console.log(str);
+        ws.send(str);
     }
 
 

@@ -57,10 +57,15 @@ public class Accepter implements IWsMsgHandler {
 	@Inject
     private ChatHistoryService chatHistoryService;
 
+	@Inject
+	private TransferMessageHandler transferMessageHandler;
+
 	private NutMap handlers = new NutMap();
 
 	public void init(){
 		handlers.addv(String.valueOf(Type.CLIENT_REQ_SERVICE), reqServiceHandler);
+		handlers.addv(String.valueOf(Type.SERVICER_REQ_RECEIVEMSG), transferMessageHandler);
+
 	}
 
 	/**

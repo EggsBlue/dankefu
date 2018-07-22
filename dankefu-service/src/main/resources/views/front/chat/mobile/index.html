@@ -206,33 +206,33 @@
 <body>
     <div class="chatWrap" id="appim">
         <div class="warp" id="chatContent">
-            <div class="message-warp">
-                <div class="date-time">05-27 14:24</div>
-                <div class="agent-message">
-                    <div class="head-img">
-                        <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
-                    </div>
-                    <div class="chat-msg-cont">
-                        <div class="chat-msg-text">
-                            客服【蛋蛋】为您服务！
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="message-warp">
-                <div class="date-time">2018-08</div>
-                <div class="user-message">
-                    <div class="head-img">
-                        <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
-                    </div>
-                    <div class="chat-msg-cont">
-                        <div class="chat-msg-text">
-                            你好，请问有什么可以帮助您的？
-                            <br> **回复0可以转人工哦**
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="message-warp">-->
+                <!--<div class="date-time">05-27 14:24</div>-->
+                <!--<div class="agent-message">-->
+                    <!--<div class="head-img">-->
+                        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="chat-msg-cont">-->
+                        <!--<div class="chat-msg-text">-->
+                            <!--客服【蛋蛋】为您服务！-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="message-warp">-->
+                <!--<div class="date-time">2018-08</div>-->
+                <!--<div class="user-message">-->
+                    <!--<div class="head-img">-->
+                        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="chat-msg-cont">-->
+                        <!--<div class="chat-msg-text">-->
+                            <!--你好，请问有什么可以帮助您的？-->
+                            <!--<br> **回复0可以转人工哦**-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
             <!--<div class="message-warp">-->
                 <!--<div class="date-time">05-27 14:24</div>-->
                 <!--<div class="agent-message">-->
@@ -271,58 +271,53 @@
 <script type="text/javascript" src="${base}/assets/js/websocket/dankefu.js"></script>
 
 
-<script id="waiting" type="text/html">
-    <div class="message-warp">
-        <div class="date-time">{{d.time}}</div>
-        <div class="agent-message">
-            <div class="head-img">
-                <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
-            </div>
-            <div class="chat-msg-cont">
-                <div class="chat-msg-text">
-                    当前客服繁忙，正在为您排队中，您前面还有{{d.waitingCount}}个人
-                </div>
-            </div>
-        </div>
-    </div>
-</script>
-<script id="join" type="text/html">
-    <div class="message-warp">
-        <div class="date-time">{{d.time}}</div>
-        <div class="agent-message">
-            <div class="head-img">
-                <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
-            </div>
-            <div class="chat-msg-cont">
-                <div class="chat-msg-text">
-                   {{d.msg}}
-                </div>
-            </div>
-        </div>
-    </div>
-</script>
+<!--<script id="waiting" type="text/html">-->
+    <!--<div class="message-warp">-->
+        <!--<div class="date-time">{{d.time}}</div>-->
+        <!--<div class="agent-message">-->
+            <!--<div class="head-img">-->
+                <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
+            <!--</div>-->
+            <!--<div class="chat-msg-cont">-->
+                <!--<div class="chat-msg-text">-->
+                    <!--当前客服繁忙，正在为您排队中，您前面还有{{d.waitingCount}}个人-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</script>-->
+<!--<script id="join" type="text/html">-->
+    <!--<div class="message-warp">-->
+        <!--<div class="date-time">{{d.time}}</div>-->
+        <!--<div class="agent-message">-->
+            <!--<div class="head-img">-->
+                <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
+            <!--</div>-->
+            <!--<div class="chat-msg-cont">-->
+                <!--<div class="chat-msg-text">-->
+                   <!--{{d.msg}}-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</script>-->
 
 
 <script id="msg" type="text/html">
-
     <div class="message-warp">
-        <div class="date-time">05-27 14:24</div>
+        <div class="date-time">{{d.prevTime || ''}}</div>
         <div class="agent-message">
             <div class="head-img">
                 <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
             </div>
             <div class="chat-msg-cont">
                 <div class="chat-msg-text">
-                    客服【蛋蛋】为您服务！
+                    {{d.content}}
                 </div>
             </div>
         </div>
     </div>
 </script>
-
-
-
-
 
 
 <script>
@@ -430,6 +425,9 @@
                 dankefu.c_handlers.nooneservicer(data.body);
                 break;
             case type.C_RESP_INVITINGMESSAGE:
+                break;
+            case type.C_RESP_RECEIVEMSG:
+                dankefu.c_handlers.receiveMsg(data.body);
                 break;
             default:
                 console.error("illegal action: "+action);
