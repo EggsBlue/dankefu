@@ -500,12 +500,7 @@
                     layer.msg("请先输入点内容");
                     return;
                 }
-
-                var box = $('#wrap')[0];
-                console.log(box);
-
-
-                console.log(app.current_chat.id);
+                console.log(app.current_chat);
                 if( app.current_chat.id){
                     var packet = {};
                     packet.action = type.S_REQ_RECEIVEMSG;
@@ -521,17 +516,12 @@
                     sendString(JSON.stringify(packet));
                     app.text_in = '';
 
-
                     app.chat_logs.records.push(packet);
                 }
-
                 setTimeout(function(){
+                    var box = $('#wrap')[0];
                     box.scrollTop = box.scrollHeight;
-                },100)
-
-
-
-
+                },50)
             }
         },
         computed: {
@@ -561,7 +551,7 @@
                 if(data.onlines){
                     app.onlineList = data.onlines;
                     app.onlineList = app.onlineList.filter(function (item) {
-                        Vue.set(item, 'lock_active', true);
+                        Vue.set(item, 'lock_active', false);
                         Vue.set(item, 'chat_logs', {
                             pageNo:0,
                             pageSize:20,
@@ -579,7 +569,7 @@
                 if(data.historys!=undefined){
                     app.historyList = data.historys;
                     app.historyList = app.historyList.filter(function (item) {
-                        Vue.set(item, 'lock_active', true);
+                        Vue.set(item, 'lock_active', false);
                         Vue.set(item, 'chat_logs', {
                             pageNo:0,
                             pageSize:20,
@@ -641,6 +631,9 @@
                 break;
             case type.S_RESP_LEAVE:
                 dankefu.s_handlers.leave(data.body);
+                break;
+            case type.S_RESP_RECEIVEMSG:
+                dankefu.s_handlers.receiveMsg(data.body);
                 break;
             default:
                 console.error("illegal action: " + action);
@@ -718,7 +711,7 @@
             if(res.code == 0){
                 logs.pageNo = res.data.pageNo;
                 logs.pageSize = res.data.pageSize;
-                logs.mongth = res.data.tableName;
+                logs.month = res.data.tableName;
                 logs.records = res.data.list;
             }else{
                 alert("错误");

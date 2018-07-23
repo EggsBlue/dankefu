@@ -46,6 +46,7 @@ public class ChatController extends Handler {
         Chat guest = chatService.getGuest(unitId, type, request, response);
         if(Lang.isNotEmpty(guest)){
             request.setAttribute("guest_id",guest.getId());
+            request.setAttribute("unitId",unitId);
         }
     }
 

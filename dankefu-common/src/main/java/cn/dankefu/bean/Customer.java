@@ -48,7 +48,7 @@ public class Customer extends BasePojo{
 
 
     @Column
-    @ColDefine(type = ColType.VARCHAR, width = 11)
+    @ColDefine(type = ColType.VARCHAR, width = 100)
     @Comment("联系电话")
     private String phone;
 

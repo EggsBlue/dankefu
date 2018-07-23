@@ -325,9 +325,15 @@
     // console.log('${@conf.get("websocket.ip")}');
     var ws;
     var guest_id = '${guest_id!}';
+    var unitId = '${unitId!}';
     var laytpl;
     var start_time;
     var end_time;
+    var servicer_id = "";
+    var session_id = "";
+    var source = "web_mobile";
+
+
     $(function(){
         start_time= new Date().getTime();
         layui.use('laytpl', function(){
@@ -382,8 +388,12 @@
             layer.msg("请输入要发送的内容");
             return;
         }
+        if(session_id == ''){
+            return;
+        }
+
         $('#chatContent').append(' <div class="message-warp">\n' +
-            '                <div class="date-time">2018-08</div>\n' +
+            '                <div class="date-time"></div>\n' +
             '                <div class="user-message">\n' +
             '                    <div class="head-img">\n' +
             '                        <img src="images/head_visitor.png" alt="">\n' +
@@ -394,6 +404,24 @@
             '                    </div>\n' +
             '                </div>\n' +
             '            </div>');
+
+
+        var packet = {};
+        packet.action = type.S_REQ_RECEIVEMSG;
+        packet.msgFrom = guest_id;
+        packet.msgTo = servicer_id;
+        packet.recordType = "chat";
+        packet.msgType = "text";
+        packet.prevTime = "";
+        packet.content = msg;
+        packet.unitId = unitId;
+        packet.session_id = session_id;
+        packet.source = source;
+
+        var str = JSON.stringify(packet)
+
+        console.log("send_plain："+str);
+        ws.send(str);
         $('#msgIn').val('');
     }
 
@@ -411,6 +439,9 @@
     function handleMsg(msgStr){
         var data = JSON.parse(msgStr);
         var action = data.action+"";
+        if(data.body.session_id){
+            session_id =  data.body.session_id;
+        }
         switch (action){
             case type.C_RESP_RESTTIME:
                 dankefu.c_handlers.resttime(data.body);

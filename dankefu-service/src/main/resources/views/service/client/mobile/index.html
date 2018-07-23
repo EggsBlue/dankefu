@@ -272,9 +272,14 @@
 <script>
     console.log('${@conf.get("websocket.port")}');
     console.log('${@conf.get("websocket.ip")}');
+
+    var guest_id = '${guest_id!}';
+    var pageNo = 1;
+    var pageSize = 20;
+    var month = "";
     $(function(){
         //初始化websocket连接
-        var ws = new ReconnectingWebSocket('ws://${@conf.get("websocket.ip")}:${@conf.get("websocket.port")}?guest_id=${guest_id!}',null, {debug: true, reconnectInterval: 3000});
+        var ws = new ReconnectingWebSocket('ws://${@conf.get("websocket.ip")}:${@conf.get("websocket.port")}?guest_id='+guest_id,null, {debug: true, reconnectInterval: 3000});
 
         ws.onopen = function(event){
             console.log("ws is open");
@@ -327,6 +332,24 @@
             '                </div>\n' +
             '            </div>');
         $('#msgIn').val('');
+    }
+
+
+    function searchMsg(){
+        $.post('${base}/chat/records/query',{chatId:guest_id,pageNo:pageNo+1,pageSize:pageSize,month:month},function(res){
+            console.log(res);
+            if(res.code == 0){
+                pageNo = res.data.pageNo;
+                pageSize = res.data.pageSize;
+                month = res.data.tableName;
+
+
+
+                logs.records = res.data.list;
+            }else{
+                alert("错误");
+            }
+        });
     }
 </script>
 </html>

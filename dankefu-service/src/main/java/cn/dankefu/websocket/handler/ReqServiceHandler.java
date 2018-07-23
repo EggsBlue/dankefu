@@ -99,7 +99,7 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                     // 不在工作时间提醒
                     history.setRestTime(true);
                     chatHistoryService.update(Chain.make("isRestTime",true),Cnd.where("id","=",history.getId()));
-                    Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_RESTTIME,NutMap.NEW()));
+                    Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_RESTTIME,NutMap.NEW().addv("session_id",history.getId())));
                     return;
                 }
             }
@@ -135,9 +135,9 @@ public class ReqServiceHandler implements MsgHandlerInterface {
         }
 
         if(isNoone){ //暂时无客服在线
-            Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_NOONESERVICER,NutMap.NEW().addv("prevTime",Times.format("MM-dd HH:mm",new Date()))));
+            Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_NOONESERVICER,NutMap.NEW().addv("prevTime",Times.format("MM-dd HH:mm",new Date())).addv("session_id",history.getId())));
             //默认不在线引导用户留言
-            Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_INVITINGMESSAGE,NutMap.NEW()));  //邀请留言
+            Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_INVITINGMESSAGE,NutMap.NEW().addv("session_id",history.getId())));  //邀请留言
         }else{
             if (is_all_busy[0]) { // 客服全忙
                 history.setBusy(true);
@@ -146,7 +146,7 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                 waitingQueue.offer(context);
                 log.debugf("客服繁忙，当前队列排队数量:%s个",waitingQueue.getWaitCount());
                 //提醒访客
-                Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_WAITING,NutMap.NEW().addv("content", "当前客服繁忙，正在为您排队中，您前面还有"+(waitingQueue.getWaitCount()-1)+"个人").addv("prevTime",Times.format("MM-dd HH:mm",new Date()))));
+                Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_WAITING,NutMap.NEW().addv("content", "当前客服繁忙，正在为您排队中，您前面还有"+(waitingQueue.getWaitCount()-1)+"个人").addv("prevTime",Times.format("MM-dd HH:mm",new Date())).addv("session_id",history.getId())));
             }else{// 分配客服
                 //找最近一次的服务记录
                 ChannelContext servicer = null;
@@ -180,7 +180,7 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                     waitingQueue.offer(context);
                     log.debugf("客服繁忙，当前队列排队数量:%s个",waitingQueue.getWaitCount());
                     //提醒访客
-                    Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_WAITING,NutMap.NEW().addv("content","当前客服繁忙，正在为您排队中，您前面还有"+(waitingQueue.getWaitCount()-1)+"个人")));
+                    Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_WAITING,NutMap.NEW().addv("content","当前客服繁忙，正在为您排队中，您前面还有"+(waitingQueue.getWaitCount()-1)+"个人").addv("session_id",history.getId())));
                 }else{//接入成功
                     Sys_user user =(Sys_user) servicer.getAttribute(Dankefu.SERVICERATTR);
                     String msg = String.format("客服【%s】为您服务!",user.getUserName());
@@ -197,7 +197,8 @@ public class ReqServiceHandler implements MsgHandlerInterface {
                     chatRecordsService.insert(chat.getId(),history.getId(),ChatRecordTypeEnum.CHAT.getType(),ChatRecordsMsgTypeEnum.TEXT.getType(),ChatRecordsDisplayEnum.normal.getType(),
                             new Date(),user.getId(),chat.getId(),msg,chat.getSource(),user.getId(),user.getUnitId());
 
-                    Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_JOIN,NutMap.NEW().addv("servicer",servicer.getAttribute(Dankefu.SERVICERATTR)).addv("history",history).addv("content",msg).addv("prevTime",time)));
+                    Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_JOIN,NutMap.NEW().addv("servicer",servicer.getAttribute(Dankefu.SERVICERATTR)).addv("history",history).addv("content",msg).addv("prevTime",time).addv("session_id",history.getId()).addv("servicer_id",user.getId())));
+                    chat.setCurr_session(history);
                     Tio.send(servicer,TioWebSocketUtils.makeWsResponse(Type.SERVICER_RESP_JOIN,NutMap.NEW().addv(Dankefu.CLIENTCURRSESSIONATTR,chat)));
                 }
             }

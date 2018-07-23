@@ -41,6 +41,7 @@ public class ChatRecordsController extends Handler {
             pageSize = 20;
         }
         Cnd cnd = Cnd.where("chatId","=",chatId).and("sys_user_id","=",uid);
+        cnd.orderBy("ct","asc");
         return  chatRecordsService.query(cnd,pageNo,pageSize,month);
     }
 

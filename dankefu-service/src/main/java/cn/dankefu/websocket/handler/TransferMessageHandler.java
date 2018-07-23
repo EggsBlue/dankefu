@@ -88,7 +88,7 @@ public class TransferMessageHandler implements MsgHandlerInterface {
                     SetWithLock<ChannelContext> contexts = Tio.getChannelContextsByUserid(WebSocketServer.GROUPCONTEXT, msgTo);
                     ChannelContext  servicer = TioWebSocketUtils.getInSetWithLock(contexts);
                     if(servicer ==null || servicer.isClosed() || servicer.isRemoved()){//对话客服已下线
-                        Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_SERVICEROFLINE,null));
+                        Tio.send(context,TioWebSocketUtils.makeWsResponse(Type.CLIENT_RESP_SERVICEROFLINE,NutMap.NEW()));
                     }else{ //中转消息到客服
                         packet.setv("msgFrom",chat.getId());
                         packet.setv("sys_user_id",user.getId());

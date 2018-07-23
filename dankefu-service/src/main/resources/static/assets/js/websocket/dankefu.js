@@ -14,6 +14,7 @@ var dankefu={
         },
         join:function(data){
             console.log("join process...");
+            servicer_id = data.servicer_id;
             console.log(data);
             var joinTpl = msg.innerHTML,chatContent = $('#chatContent');
             laytpl(joinTpl).render(data, function(html){
@@ -76,6 +77,16 @@ var dankefu={
                 app.onlineList.push(data.curr_session);
                 console.log("id:"+data.curr_session.id+",已添加到列表");
             }
+
+            Vue.set(data.curr_session, 'lock_active', false);
+            Vue.set(data.curr_session, 'chat_logs', {
+                pageNo:0,
+                pageSize:20,
+                month:'',
+                chatId:data.curr_session.id,
+                records:[]
+            });
+
         },
         leave:function(data){
             console.log("leave process...");
@@ -95,6 +106,15 @@ var dankefu={
                     return;
                 }
             });
+        },
+        receiveMsg:function(data){
+            console.log("receiveMsg process...");
+            console.log(data);
+            app.chat_logs.records.push(data);
+            setTimeout(function(){
+                var box = $('#wrap')[0];
+                box.scrollTop = box.scrollHeight;
+            },50)
         }
     }
 }
