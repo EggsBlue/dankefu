@@ -7,7 +7,7 @@ var dankefu={
         waiting:function(data){
             console.log("waiting process...");
             console.log(data);
-            var waitingTpl = msg.innerHTML,chatContent = $('#chatContent');
+            var waitingTpl = msg_item.innerHTML,chatContent = $('#chatContent');
             laytpl(waitingTpl).render(data, function(html){
                 $(chatContent).append( html );
             });
@@ -16,7 +16,7 @@ var dankefu={
             console.log("join process...");
             servicer_id = data.servicer_id;
             console.log(data);
-            var joinTpl = msg.innerHTML,chatContent = $('#chatContent');
+            var joinTpl =msg_item.innerHTML,chatContent = $('#chatContent');
             laytpl(joinTpl).render(data, function(html){
                 $(chatContent).append( html );
             });
@@ -27,7 +27,7 @@ var dankefu={
         },
         receiveMsg:function(data){
             console.log("receive process...");
-            var receiveTpl = msg.innerHTML,chatContent = $('#chatContent');
+            var receiveTpl =msg_item.innerHTML,chatContent = $('#chatContent');
             laytpl(receiveTpl).render(data, function(html){
                 $(chatContent).append( html );
             });

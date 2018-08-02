@@ -29,7 +29,7 @@ public class ChatRecordsController extends Handler {
     @Ok("json")
     @POST
     public Result query(
-            @Param("chatId")String chatId,@Attr("uid") String uid,
+            @Param("chatId")String chatId,@Attr("uid") String uid, @Param("servicer_id")String servicer_id,
             @Param("pageNo")int pageNo,@Param("pageSize")int pageSize,@Param("month")String month){
         if(Strings.isBlank(chatId)){
             return success();
@@ -40,7 +40,10 @@ public class ChatRecordsController extends Handler {
         if(pageSize == 0){
             pageSize = 20;
         }
-        Cnd cnd = Cnd.where("chatId","=",chatId).and("sys_user_id","=",uid);
+        if(Strings.isNotBlank(servicer_id)){
+            uid = servicer_id;
+        }
+        Cnd cnd = Cnd.where("chatId","=",chatId);
         cnd.orderBy("ct","asc");
         return  chatRecordsService.query(cnd,pageNo,pageSize,month);
     }

@@ -5,9 +5,11 @@ import cn.dankefu.bean.Sys_unit;
 import cn.dankefu.dto.Result;
 import cn.dankefu.enums.ClientSourceEnum;
 import cn.dankefu.handler.Handler;
+import cn.dankefu.service.ChatRecordsService;
 import cn.dankefu.service.ChatService;
 import cn.dankefu.service.SysUnitService;
 import jdk.nashorn.internal.ir.annotations.Reference;
+import org.nutz.dao.Cnd;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.*;
@@ -30,6 +32,10 @@ public class ChatController extends Handler {
 
     @Inject
     private SysUnitService sysUnitService;
+
+
+    @Inject
+    private ChatRecordsService chatRecordsService;
 
 
     /**
@@ -59,6 +65,30 @@ public class ChatController extends Handler {
             return error("非法请求");
         }
         return success().setData(new NutMap("guest_id",chat.getId()));
+    }
+
+
+    @At("/query")
+    @Ok("json")
+    @POST
+    public Result query(
+            @Param("chatId")String chatId,@Attr("uid") String uid, @Param("servicer_id")String servicer_id,
+            @Param("pageNo")int pageNo,@Param("pageSize")int pageSize,@Param("month")String month){
+        if(Strings.isBlank(chatId)){
+            return success();
+        }
+        if(pageNo == 0){
+            pageNo = 1;
+        }
+        if(pageSize == 0){
+            pageSize = 20;
+        }
+        if(Strings.isNotBlank(servicer_id)){
+            uid = servicer_id;
+        }
+        Cnd cnd = Cnd.where("chatId","=",chatId).and("sys_user_id","=",uid);
+        cnd.orderBy("ct","asc");
+        return  chatRecordsService.query(cnd,pageNo,pageSize,month);
     }
 
 

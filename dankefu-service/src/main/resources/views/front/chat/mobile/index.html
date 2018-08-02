@@ -5,7 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="initial-scale=1, user-scalable=0, minimal-ui" charset="UTF-8">
+    <link rel="stylesheet" href="${base}/assets/js/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="${base}/assets/js/plugins/mescroll/mescroll.min.css">
 
     <title>在线客服</title>
     <style>
@@ -21,9 +26,6 @@
             /* display: flex; */
             /* border:1px solid red; */
         }
-
-
-
         .message-warp {
             /* border: 2px solid red; */
             font-size: .40625rem;
@@ -200,12 +202,15 @@
         .msg-last{
             margin-bottom: 130px;
         }
+        /*.warp,.chatWrap{*/
+            /*height:50%;*/
+        /*}*/
     </style>
 </head>
 
 <body>
-    <div class="chatWrap" id="appim">
-        <div class="warp" id="chatContent">
+    <div class="chatWrap " id="appim">
+        <div class="warp mescroll" id="chatContent">
             <!--<div class="message-warp">-->
                 <!--<div class="date-time">05-27 14:24</div>-->
                 <!--<div class="agent-message">-->
@@ -269,6 +274,7 @@
 <script type="text/javascript" src="${base}/assets/js/websocket/dankefu-types.js"></script>
 <script type="text/javascript" src="${base}/assets/js/websocket/dankefu-tpls.js"></script>
 <script type="text/javascript" src="${base}/assets/js/websocket/dankefu.js"></script>
+<script type="text/javascript" src="${base}/assets/js/plugins/mescroll/mescroll.min.js"></script>
 
 
 <!--<script id="waiting" type="text/html">-->
@@ -303,7 +309,7 @@
 <!--</script>-->
 
 
-<script id="msg" type="text/html">
+<script id="msg_item" type="text/html">
     <div class="message-warp">
         <div class="date-time">{{d.prevTime || ''}}</div>
         <div class="agent-message">
@@ -320,6 +326,28 @@
 </script>
 
 
+<script id="msg_list" type="text/html">
+    {{#  layui.each(d.list, function(index, item){ }}
+        <div class="message-warp">
+            <div class="date-time">{{item.prevTime || ''}}</div>
+            <div class="agent-message">
+                <div class="head-img">
+                    <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
+                </div>
+                <div class="chat-msg-cont">
+                    <div class="chat-msg-text">
+                        {{item.content}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{#  }); }}
+    {{#  if(d.list.length === 0){ }}
+        无数据
+    {{#  } }}
+</script>
+
+
 <script>
     // console.log('${@conf.get("websocket.port")}');
     // console.log('${@conf.get("websocket.ip")}');
@@ -327,17 +355,22 @@
     var guest_id = '${guest_id!}';
     var unitId = '${unitId!}';
     var laytpl;
+    var layflow;
     var start_time;
     var end_time;
     var servicer_id = "";
     var session_id = "";
     var source = "web_mobile";
-
+    var page = 1;
+    var pageSize = 20;
+    var month = "";
+    var mescroll;
 
     $(function(){
         start_time= new Date().getTime();
         layui.use('laytpl', function(){
             laytpl = layui.laytpl;
+            layflow = layui.flow;
         });
 
         //初始化websocket连接
@@ -354,7 +387,6 @@
         ws.onerror = function(){
             console.log("ws is error");
         }
-
 
         ws.onclose = function(){
             console.log("ws is close");
@@ -380,6 +412,7 @@
             }
         });
 
+        init();
     });
 
     function sendMsg(){
@@ -392,20 +425,6 @@
             return;
         }
 
-        $('#chatContent').append(' <div class="message-warp">\n' +
-            '                <div class="date-time"></div>\n' +
-            '                <div class="user-message">\n' +
-            '                    <div class="head-img">\n' +
-            '                        <img src="images/head_visitor.png" alt="">\n' +
-            '                    </div>\n' +
-            '                    <div class="chat-msg-cont">\n' +
-            '                        <div class="chat-msg-text">\n' +msg+
-            '                        </div>\n' +
-            '                    </div>\n' +
-            '                </div>\n' +
-            '            </div>');
-
-
         var packet = {};
         packet.action = type.S_REQ_RECEIVEMSG;
         packet.msgFrom = guest_id;
@@ -417,11 +436,14 @@
         packet.unitId = unitId;
         packet.session_id = session_id;
         packet.source = source;
-
         var str = JSON.stringify(packet)
 
         console.log("send_plain："+str);
         ws.send(str);
+        var receiveTpl = msg_item.innerHTML,chatContent = $('#chatContent');
+        laytpl(receiveTpl).render(packet, function(html){
+            $(chatContent).append( html );
+        });
         $('#msgIn').val('');
     }
 
@@ -432,7 +454,7 @@
         };
         var str = JSON.stringify(packet)
 
-        console.log("reqService："+str);
+        console.log("请求服务....");
         ws.send(str);
     }
 
@@ -467,6 +489,62 @@
         end_time = new Date().getTime();
         console.log("process done :"+(end_time-start_time)+" ms");
     }
+
+
+    function downCallback(){
+        $.post('${base}/front/chat/query',{chatId:guest_id,servicer_id:servicer_id,pageNo:page,month:month},function(data){
+            console.log(data);
+            month = data.tableName;
+            if(data.data.list && data.data.list.length>0){
+                // alert(1);
+                page++;
+                for(item of data.data.list){
+                    var receiveTpl = msg_item.innerHTML,chatContent = $('#chatContent').find('.mescroll-downwarp');
+                    laytpl(receiveTpl).render(item, function(html){
+                        chatContent.after(html);
+                    });
+                }
+            }
+        } ) ;
+        //
+        //
+        // for(var i = 0; i < 8; i++){
+        //     j++;
+        //     var packet = {};
+        //     packet.action = type.S_REQ_RECEIVEMSG;
+        //     packet.msgFrom = '111'
+        //     packet.msgTo = '222';
+        //     packet.recordType = "chat";
+        //     packet.msgType = "text";
+        //     packet.prevTime = "";
+        //     packet.content = ''+j;
+        //     packet.unitId = unitId;
+        //     packet.session_id = '';
+        //     packet.source = source;
+        //     var str = JSON.stringify(packet)
+        //
+        //     // console.log("send_plain："+str);
+        //     var receiveTpl = msg_item.innerHTML,chatContent = $('#chatContent').find('.mescroll-downwarp');
+        //     laytpl(receiveTpl).render(packet, function(html){
+        //         chatContent.after(html);
+        //     });
+        // }
+        mescroll.endSuccess();
+    }
+
+    function init(){
+        mescroll = new MeScroll("chatContent", { //第一个参数"mescroll"对应上面布局结构div的id
+            //如果您的下拉刷新是重置列表数据,那么down完全可以不用配置,具体用法参考第一个基础案例
+            //解析: down.callback默认调用mescroll.resetUpScroll(),而resetUpScroll会将page.num=1,再触发up.callback
+            use:true,
+            offset:0,
+            down: {
+                callback: downCallback //下拉刷新的回调,别写成downCallback(),多了括号就自动执行方法了
+            }
+        });
+
+    }
+
 
 </script>
 </html>

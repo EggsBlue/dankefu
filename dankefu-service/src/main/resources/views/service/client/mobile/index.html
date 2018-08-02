@@ -274,9 +274,7 @@
     console.log('${@conf.get("websocket.ip")}');
 
     var guest_id = '${guest_id!}';
-    var pageNo = 1;
-    var pageSize = 20;
-    var month = "";
+
     $(function(){
         //初始化websocket连接
         var ws = new ReconnectingWebSocket('ws://${@conf.get("websocket.ip")}:${@conf.get("websocket.port")}?guest_id='+guest_id,null, {debug: true, reconnectInterval: 3000});

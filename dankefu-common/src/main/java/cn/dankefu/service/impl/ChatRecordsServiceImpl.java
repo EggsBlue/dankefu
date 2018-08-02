@@ -97,6 +97,10 @@ public class ChatRecordsServiceImpl extends BaseServiceImpl<Chat_records> implem
         try {
             TableName.set(tableName);
 
+            if(!dao().exists(Chat_records.class)){
+                dao().create(Chat_records.class,false);
+            }
+
             Pager p = new Pager().setPageNumber(pageNo).setPageSize(pageSize);
             List<Chat_records> records = dao().query(Chat_records.class, cnd, p);
             if(records==null || records.size()==0){//如果未查询到数据,可能这个月数据查完了,so 我们来查上个月
