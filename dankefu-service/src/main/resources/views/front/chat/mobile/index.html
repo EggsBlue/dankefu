@@ -32,12 +32,16 @@
             clear:both;
         }
 
-        .message-warp .date-time {
+        .message-warp .date-time,.tip {
             text-align: center;
             color: #b2c2cc;
             margin-top: .3125rem;
             clear: both;
             /* border: 1px solid black; */
+        }
+        .tip-border{
+            border-bottom: 1px dashed #b2c2cc;
+            margin-bottom: 10px;
         }
 
         .message-warp .agent-message {
@@ -211,48 +215,39 @@
 <body>
     <div class="chatWrap " id="appim">
         <div class="warp mescroll" id="chatContent">
-            <!--<div class="message-warp">-->
-                <!--<div class="date-time">05-27 14:24</div>-->
-                <!--<div class="agent-message">-->
-                    <!--<div class="head-img">-->
-                        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
-                    <!--</div>-->
-                    <!--<div class="chat-msg-cont">-->
-                        <!--<div class="chat-msg-text">-->
-                            <!--客服【蛋蛋】为您服务！-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="message-warp">-->
-                <!--<div class="date-time">2018-08</div>-->
-                <!--<div class="user-message">-->
-                    <!--<div class="head-img">-->
-                        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
-                    <!--</div>-->
-                    <!--<div class="chat-msg-cont">-->
-                        <!--<div class="chat-msg-text">-->
-                            <!--你好，请问有什么可以帮助您的？-->
-                            <!--<br> **回复0可以转人工哦**-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="message-warp">-->
-                <!--<div class="date-time">05-27 14:24</div>-->
-                <!--<div class="agent-message">-->
-                    <!--<div class="head-img">-->
-                        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
-                    <!--</div>-->
-                    <!--<div class="chat-msg-cont">-->
-                        <!--<div class="chat-msg-text">-->
-                            <!--你好，请问有什么可以帮助您的？-->
-                            <!--<br> **回复0可以转人工哦**-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
+
         </div>
+        <!--<div class="message-warp">-->
+        <!--<div class="date-time">以上是历史消息</div>-->
+        <!--</div>-->
+        <!--<div class="message-warp">-->
+        <!--<div class="date-time">2018-08</div>-->
+        <!--<div class="user-message">-->
+        <!--<div class="head-img">-->
+        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
+        <!--</div>-->
+        <!--<div class="chat-msg-cont">-->
+        <!--<div class="chat-msg-text">-->
+        <!--你好，请问有什么可以帮助您的？-->
+        <!--<br> **回复0可以转人工哦**-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="message-warp">-->
+        <!--<div class="date-time">05-27 14:24</div>-->
+        <!--<div class="agent-message">-->
+        <!--<div class="head-img">-->
+        <!--<img src="${base}/assets/mobile/images/head_visitor.png" alt="">-->
+        <!--</div>-->
+        <!--<div class="chat-msg-cont">-->
+        <!--<div class="chat-msg-text">-->
+        <!--你好，请问有什么可以帮助您的？-->
+        <!--<br> **回复0可以转人工哦**-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
         <footer>
             <div class="warp">
                 <i class="more"></i>
@@ -314,14 +309,20 @@
         <div class="date-time">{{d.prevTime || ''}}</div>
         <div class="agent-message">
             <div class="head-img">
-                <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
+                <img src="{{d.icon || '${base}/assets/mobile/images/head_visitor.png'}}" alt="">
             </div>
             <div class="chat-msg-cont">
                 <div class="chat-msg-text">
-                    {{d.content}}
+                    {{d.content||'-'}}
                 </div>
             </div>
         </div>
+    </div>
+</script>
+
+<script id="tips" type="text/html">
+    <div class="message-warp">
+        <div class="tip-border tip">{{d.msg}}</div>
     </div>
 </script>
 
@@ -332,7 +333,7 @@
             <div class="date-time">{{item.prevTime || ''}}</div>
             <div class="agent-message">
                 <div class="head-img">
-                    <img src="${base}/assets/mobile/images/head_visitor.png" alt="">
+                    <img src="{{item.icon ||'${base}/assets/mobile/images/head_visitor.png' }}" alt="">
                 </div>
                 <div class="chat-msg-cont">
                     <div class="chat-msg-text">
@@ -355,51 +356,33 @@
     var guest_id = '${guest_id!}';
     var unitId = '${unitId!}';
     var laytpl;
-    var layflow;
     var start_time;
     var end_time;
-    var servicer_id = "";
-    var session_id = "";
-    var source = "web_mobile";
+    var servicer_id = "";  //当前客服标识
+    var session_id = "";  //当前来访会话标识
+    var source = "web_mobile";  //标识来源
     var page = 1;
     var pageSize = 20;
-    var month = "";
-    var mescroll;
+    var month = ""; //聊天记录月份记录
+    var mescroll;   //下拉刷新组件
+    var loadRecord = false;  //聊天记录是否加载完毕
+    var ct = 0;
+    var chatContentScrollTop = 0;
+
 
     $(function(){
-        start_time= new Date().getTime();
         layui.use('laytpl', function(){
             laytpl = layui.laytpl;
-            layflow = layui.flow;
         });
+        start_time= new Date().getTime();
+        initRecords();
 
-        //初始化websocket连接
-        ws = new ReconnectingWebSocket('ws://${@conf.get("websocket.ip")}:${@conf.get("websocket.port")}?type=web_mobile&guest_id='+guest_id,null, {debug: true, reconnectInterval: 3000});
-
-        ws.onopen = function(event){
-            console.log("ws is open");
-            reqService();
-
-            end_time= new Date().getTime();
-            console.log("init done: "+(end_time-start_time)+" ms");
-        };
-
-        ws.onerror = function(){
-            console.log("ws is error");
-        }
-
-        ws.onclose = function(){
-            console.log("ws is close");
-        };
-
-        ws.onmessage = function(event){
-            console.log("ws recive message..");
-            console.log(event.data);
-            start_time= new Date().getTime();
-            //处理消息
-            handleMsg(event.data);
-        }
-
+        var t = setInterval(function(){
+           if(loadRecord){
+               initSocket();
+               clearTimeout(t)
+           }
+        },10);
 
         $('#send').click(function(){
             sendMsg();
@@ -411,8 +394,6 @@
                 sendMsg();
             }
         });
-
-        init();
     });
 
     function sendMsg(){
@@ -444,6 +425,8 @@
         laytpl(receiveTpl).render(packet, function(html){
             $(chatContent).append( html );
         });
+        var box = $('#chatContent')[0];
+        box.scrollTop = box.scrollHeight;
         $('#msgIn').val('');
     }
 
@@ -453,7 +436,6 @@
             guest_id:guest_id
         };
         var str = JSON.stringify(packet)
-
         console.log("请求服务....");
         ws.send(str);
     }
@@ -492,20 +474,60 @@
 
 
     function downCallback(){
-        $.post('${base}/front/chat/query',{chatId:guest_id,servicer_id:servicer_id,pageNo:page,month:month},function(data){
-            console.log(data);
-            month = data.tableName;
-            if(data.data.list && data.data.list.length>0){
+        $.ajax({
+            url:'${base}/front/chat/query',
+            method:'post',
+            data:{chatId:guest_id,servicer_id:servicer_id,month:month,offset_ct:ct},
+            async:false,
+            success:function(data){
+                console.log(data);
+                month = data.tableName;
                 // alert(1);
                 page++;
-                for(item of data.data.list){
-                    var receiveTpl = msg_item.innerHTML,chatContent = $('#chatContent').find('.mescroll-downwarp');
-                    laytpl(receiveTpl).render(item, function(html){
-                        chatContent.after(html);
-                    });
+                if(data.data && data.data.list && data.data.list.length>0){
+                    var chatContent = $('#chatContent');;
+                    for(item of data.data.list){
+                        var receiveTpl = msg_item.innerHTML;
+                        var loadEl = $(chatContent).find('.mescroll-downwarp');
+                        laytpl(receiveTpl).render(item, function(html){
+                            $(loadEl).after(html);
+                        });
+                        // var msg_itemEl = $('.message-warp')[0];
+                        // console.log(msg_itemEl);
+                    }
+
+                    if(page == 2){
+                        var tipTpl = tips.innerHTML;
+                        laytpl(tipTpl).render({msg:'以上为历史消息'}, function(html){
+                            $(chatContent).append(html);
+                        });
+                        chatContent[0].scrollTop = chatContent[0].scrollHeight;
+                    }
+                    console.log("scrollHeight:"+ chatContent[0].scrollHeight );
+                    console.log("当前chatContentScrollTop:"+chatContentScrollTop);
+                    console.log("当前chatContent[0].scrollTop:"+chatContent[0].scrollTop);
+                    // var h = chatContent[0].scrollHeight - chatContentScrollTop;
+                    // console.log("加载后高度:"+h);
+                    chatContent[0].scrollTop = chatContentScrollTop;
+                    chatContentScrollTop = chatContent[0].scrollHeight;
+                    console.log("结算后:"+chatContentScrollTop);
+
+                    // chatContent[0].scrollTop = data.data.list.length * 55;
+                    console.log(data.data.list);
+                    var item = data.data.list[data.data.list.length-1];
+                    console.log(ct);
+                    ct = item.createTime;
                 }
+
+                loadRecord = true;
+                console.log("聊天记录查询完毕...");
+            },
+            error:function(e){
+                console.log(e)
+                loadRecord = true;
             }
-        } ) ;
+        });
+
         //
         //
         // for(var i = 0; i < 8; i++){
@@ -532,7 +554,7 @@
         mescroll.endSuccess();
     }
 
-    function init(){
+    function initRecords(){
         mescroll = new MeScroll("chatContent", { //第一个参数"mescroll"对应上面布局结构div的id
             //如果您的下拉刷新是重置列表数据,那么down完全可以不用配置,具体用法参考第一个基础案例
             //解析: down.callback默认调用mescroll.resetUpScroll(),而resetUpScroll会将page.num=1,再触发up.callback
@@ -543,8 +565,39 @@
             }
         });
 
+        console.warn("initRecords结尾...");
     }
 
 
+
+    function initSocket(){
+        console.log("开始建立socket连接");
+        //初始化websocket连接
+        ws = new ReconnectingWebSocket('ws://${@conf.get("websocket.ip")}:${@conf.get("websocket.port")}?type=web_mobile&guest_id='+guest_id,null, {debug: true, reconnectInterval: 3000});
+
+        ws.onopen = function(event){
+            console.log("ws is open");
+            reqService();
+
+            end_time= new Date().getTime();
+            console.log("init done: "+(end_time-start_time)+" ms");
+        };
+
+        ws.onerror = function(){
+            console.log("ws is error");
+        }
+
+        ws.onclose = function(){
+            console.log("ws is close");
+        };
+
+        ws.onmessage = function(event){
+            console.log("ws recive message..");
+            // console.log(event.data);
+            start_time= new Date().getTime();
+            //处理消息
+            handleMsg(event.data);
+        }
+    }
 </script>
 </html>

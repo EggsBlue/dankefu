@@ -69,26 +69,30 @@ public class ChatController extends Handler {
 
 
     @At("/query")
-    @Ok("json")
+    @Ok("json:full")
     @POST
     public Result query(
             @Param("chatId")String chatId,@Attr("uid") String uid, @Param("servicer_id")String servicer_id,
-            @Param("pageNo")int pageNo,@Param("pageSize")int pageSize,@Param("month")String month){
+            @Param("pageSize")int pageSize,@Param("offset_ct")Long ct,
+            @Param("month")String month){
         if(Strings.isBlank(chatId)){
             return success();
         }
-        if(pageNo == 0){
-            pageNo = 1;
-        }
         if(pageSize == 0){
-            pageSize = 20;
+            pageSize = 15;
         }
         if(Strings.isNotBlank(servicer_id)){
             uid = servicer_id;
         }
-        Cnd cnd = Cnd.where("chatId","=",chatId).and("sys_user_id","=",uid);
-        cnd.orderBy("ct","asc");
-        return  chatRecordsService.query(cnd,pageNo,pageSize,month);
+        Cnd cnd = Cnd.where("chatId","=",chatId);
+        if(ct!=null && ct!=0){
+            cnd.and("ct","<",ct);
+        }
+//        if(Strings.isNotBlank(uid)){
+//            cnd.and("sys_user_id","=",uid);
+//        }
+        cnd.orderBy("ct","desc");
+        return  chatRecordsService.query2(cnd,pageSize,month);
     }
 
 

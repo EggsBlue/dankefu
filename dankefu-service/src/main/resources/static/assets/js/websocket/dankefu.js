@@ -2,11 +2,11 @@ var dankefu={
     c_handlers:{
         resttime:function(data){
             console.log("resttime process...");
-            console.log(data);
+            // console.log(data);
         },
         waiting:function(data){
             console.log("waiting process...");
-            console.log(data);
+            // console.log(data);
             var waitingTpl = msg_item.innerHTML,chatContent = $('#chatContent');
             laytpl(waitingTpl).render(data, function(html){
                 $(chatContent).append( html );
@@ -15,15 +15,29 @@ var dankefu={
         join:function(data){
             console.log("join process...");
             servicer_id = data.servicer_id;
-            console.log(data);
+            if(ct ==0){
+                // console.log(data);
+                ct = data.ct;
+                console.log("ct:::"+ct);
+            }
             var joinTpl =msg_item.innerHTML,chatContent = $('#chatContent');
             laytpl(joinTpl).render(data, function(html){
                 $(chatContent).append( html );
             });
+            setTimeout(function(){
+                chatContent[0].scrollTop = chatContent[0].scrollHeight;
+                chatContentScrollTop = chatContent[0].scrollHeight;
+                console.log("最后scrollHeight:"+chatContentScrollTop);
+            },50)
         },
         nooneservicer:function(data){
             console.log("nooneservicer process...");
-            console.log(data);
+            // console.log(data);
+            var joinTpl =msg_item.innerHTML,chatContent = $('#chatContent');
+            laytpl(joinTpl).render(data, function(html){
+                $(chatContent).append( html );
+            });
+            chatContent[0].scrollTop = chatContent[0].scrollHeight;
         },
         receiveMsg:function(data){
             console.log("receive process...");
@@ -31,6 +45,11 @@ var dankefu={
             laytpl(receiveTpl).render(data, function(html){
                 $(chatContent).append( html );
             });
+
+            setTimeout(function(){
+                chatContent.scrollTop = chatContent.scrollHeight;
+                chatContentScrollTop = chatContent.scrollHeight;
+            },50)
         },
         sendPlain:function(){
             var msg = $('#msgIn').val();
@@ -53,9 +72,7 @@ var dankefu={
             sendString(JSON.stringify(packet));
             app.text_in = '';
 
-
             app.chat_logs.records.push(packet);
-
 
             $('#msgIn').val('');
         }
@@ -63,7 +80,7 @@ var dankefu={
     s_handlers:{
         join:function(data){
             console.log("join process...");
-            console.log(data);
+            // console.log(data);
             var flag = true;
             app.onlineList.forEach((t)=>{
                 if(t.id == data.curr_session.id){
@@ -90,7 +107,7 @@ var dankefu={
         },
         leave:function(data){
             console.log("leave process...");
-            console.log(data);
+            // console.log(data);
             // leaveItems = $('#chat-list').find("[chat-id="+data.curr_session.chatId+"]");
             // console.log(leaveItems);
             // $.each(leaveItems,function(idx){

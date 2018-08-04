@@ -124,4 +124,40 @@ public class ChatRecordsServiceImpl extends BaseServiceImpl<Chat_records> implem
         }
         return Result.SUCCESS().setData(data);
     }
+
+    @Override
+    public Result query2(Cnd cnd, int pageSize, String tableName) {
+        if (Strings.isBlank(tableName)) {
+            tableName = Times.format("yyyyMM",new Date());
+        }
+        NutMap data = NutMap.NEW();
+        try {
+            TableName.set(tableName);
+
+            if(!dao().exists(Chat_records.class)){
+                dao().create(Chat_records.class,false);
+            }
+
+            Pager p = new Pager().setPageNumber(1).setPageSize(pageSize);
+            List<Chat_records> records = dao().query(Chat_records.class, cnd, p);
+            if(records==null || records.size()==0){//如果未查询到数据,可能这个月数据查完了,so 我们来查上个月
+                Calendar tableNameCal = Calendar.getInstance();
+                tableNameCal.setTime(Times.parse("yyyyMM",tableName));
+                tableNameCal.add(Calendar.MONTH,-1);
+
+                tableName = Times.format("yyyyMM",tableNameCal.getTime());
+                TableName.set(tableName);
+                if(dao().exists(Chat_records.class)){
+                    p.setPageNumber(1);
+                    records = dao().query(Chat_records.class, cnd, p);
+                }
+            }
+            data.setv("tableName",tableName).setv("list",records);
+        } catch (ParseException e) {
+            log.error(e);
+        } finally {
+            TableName.clear();
+        }
+        return Result.SUCCESS().setData(data);
+    }
 }

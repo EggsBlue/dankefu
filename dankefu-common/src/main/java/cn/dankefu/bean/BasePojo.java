@@ -19,12 +19,12 @@ public class BasePojo implements Serializable {
     @Prev(els=@EL("$me.now()"))
     @Column("ct")
     @Comment("创建时间")
-    protected Date createTime;
+    protected Long createTime;
 
     @Prev(els=@EL("$me.now()"))
     @Column("ut")
     @Comment("最后一次修改时间")
-    protected Date updateTime;
+    protected Long updateTime;
 
     @Column("at")
     @Comment("操作人")
@@ -35,7 +35,6 @@ public class BasePojo implements Serializable {
     @ColDefine(type = ColType.BOOLEAN)
     @Comment("是否删除")
     protected boolean delFlag;
-
 
     public String getAt() {
         return at;
@@ -57,24 +56,24 @@ public class BasePojo implements Serializable {
         return Json.toJson(this, JsonFormat.compact().setQuoteName(true).setIgnoreNull(false));
     }
 
-    public Date getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public Long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
     
-    public Date now() {
-        return new Date();
+    public Long now() {
+        return System.currentTimeMillis();
     }
     
     public String uuid() {

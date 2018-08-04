@@ -44,7 +44,7 @@ public class ChatRecordsController extends Handler {
             uid = servicer_id;
         }
         Cnd cnd = Cnd.where("chatId","=",chatId);
-        cnd.orderBy("ct","asc");
+        cnd.orderBy("ct","desc");
         return  chatRecordsService.query(cnd,pageNo,pageSize,month);
     }
 

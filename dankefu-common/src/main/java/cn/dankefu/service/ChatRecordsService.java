@@ -32,4 +32,14 @@ public interface ChatRecordsService extends BaseService<Chat_records> {
      */
     Result query(Cnd cnd, int pageNo, int pageSize, String tableName);
 
+
+    /**
+     * 分页查询2
+     * @param cnd
+     * @param pageSize
+     * @param tableName
+     * @return
+     */
+    Result query2(Cnd cnd, int pageSize, String tableName);
+
 }

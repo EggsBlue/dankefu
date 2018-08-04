@@ -150,7 +150,6 @@ public class Sys_log extends BasePojo {
             sysLog.setIp(getIP(getReq()));
         }
         sysLog.setAt(ShiroUtil.getUid());
-        sysLog.setCreateTime(new Date());
         sysLog.setDelFlag(false);
         sysLog.setUsername(ShiroUtil.getUsername());
         return sysLog;
