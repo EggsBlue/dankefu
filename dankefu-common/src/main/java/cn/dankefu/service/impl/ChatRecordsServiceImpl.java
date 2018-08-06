@@ -101,7 +101,7 @@ public class ChatRecordsServiceImpl extends BaseServiceImpl<Chat_records> implem
                 dao().create(Chat_records.class,false);
             }
 
-            Pager p = new Pager().setPageNumber(pageNo).setPageSize(pageSize);
+            Pager p = new Pager().setPageNumber(1).setPageSize(pageSize);
             List<Chat_records> records = dao().query(Chat_records.class, cnd, p);
             if(records==null || records.size()==0){//如果未查询到数据,可能这个月数据查完了,so 我们来查上个月
                 Calendar tableNameCal = Calendar.getInstance();
@@ -111,8 +111,7 @@ public class ChatRecordsServiceImpl extends BaseServiceImpl<Chat_records> implem
                 tableName = Times.format("yyyyMM",tableNameCal.getTime());
                 TableName.set(tableName);
                 if(dao().exists(Chat_records.class)){
-                    pageNo = 1;
-                    p.setPageNumber(pageNo);
+                    p.setPageNumber(1);
                     records = dao().query(Chat_records.class, cnd, p);
                 }
             }

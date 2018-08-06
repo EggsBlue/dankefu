@@ -30,7 +30,7 @@ public class ChatRecordsController extends Handler {
     @POST
     public Result query(
             @Param("chatId")String chatId,@Attr("uid") String uid, @Param("servicer_id")String servicer_id,
-            @Param("pageNo")int pageNo,@Param("pageSize")int pageSize,@Param("month")String month){
+            @Param("pageNo")int pageNo,@Param("pageSize")int pageSize,@Param("month")String month,@Param("offset_ct")Long offsetCt){
         if(Strings.isBlank(chatId)){
             return success();
         }
@@ -43,7 +43,11 @@ public class ChatRecordsController extends Handler {
         if(Strings.isNotBlank(servicer_id)){
             uid = servicer_id;
         }
+
         Cnd cnd = Cnd.where("chatId","=",chatId);
+        if(offsetCt!=null && offsetCt>0){
+            cnd.and("ct","<",offsetCt);
+        }
         cnd.orderBy("ct","desc");
         return  chatRecordsService.query(cnd,pageNo,pageSize,month);
     }

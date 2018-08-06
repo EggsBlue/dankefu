@@ -40,6 +40,7 @@ var dankefu={
             chatContent[0].scrollTop = chatContent[0].scrollHeight;
         },
         receiveMsg:function(data){
+            console.log(data);
             console.log("receive process...");
             var receiveTpl =msg_item.innerHTML,chatContent = $('#chatContent');
             laytpl(receiveTpl).render(data, function(html){
@@ -47,8 +48,7 @@ var dankefu={
             });
 
             setTimeout(function(){
-                chatContent.scrollTop = chatContent.scrollHeight;
-                chatContentScrollTop = chatContent.scrollHeight;
+                // chatContent[0].scrollTop = chatContent[0].scrollHeight;
             },50)
         },
         sendPlain:function(){

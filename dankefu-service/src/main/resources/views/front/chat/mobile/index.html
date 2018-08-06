@@ -215,7 +215,6 @@
 <body>
     <div class="chatWrap " id="appim">
         <div class="warp mescroll" id="chatContent">
-
         </div>
         <!--<div class="message-warp">-->
         <!--<div class="date-time">以上是历史消息</div>-->
@@ -307,7 +306,7 @@
 <script id="msg_item" type="text/html">
     <div class="message-warp">
         <div class="date-time">{{d.prevTime || ''}}</div>
-        <div class="agent-message">
+        <div class=" {{#  if(d.msgFrom == guest_id){  }}  user-message {{# }else{   }} agent-message  {{# } }}   ">
             <div class="head-img">
                 <img src="{{d.icon || '${base}/assets/mobile/images/head_visitor.png'}}" alt="">
             </div>
@@ -503,13 +502,11 @@
                         });
                         chatContent[0].scrollTop = chatContent[0].scrollHeight;
                     }
-                    console.log("scrollHeight:"+ chatContent[0].scrollHeight );
-                    console.log("当前chatContentScrollTop:"+chatContentScrollTop);
-                    console.log("当前chatContent[0].scrollTop:"+chatContent[0].scrollTop);
-                    // var h = chatContent[0].scrollHeight - chatContentScrollTop;
-                    // console.log("加载后高度:"+h);
-                    chatContent[0].scrollTop = chatContentScrollTop;
-                    chatContentScrollTop = chatContent[0].scrollHeight;
+
+
+                    chatContent[0].scrollTop = 52*data.data.list.length;
+                    // chatContentScrollTop = chatContent[0].scrollHeight;
+
                     console.log("结算后:"+chatContentScrollTop);
 
                     // chatContent[0].scrollTop = data.data.list.length * 55;
