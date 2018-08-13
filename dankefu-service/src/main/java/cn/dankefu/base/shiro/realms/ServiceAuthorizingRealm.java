@@ -61,7 +61,7 @@ public class ServiceAuthorizingRealm extends AuthorizingRealm {
             if (user.isDisabled()) {//
                 throw Lang.makeThrow(LockedAccountException.class, "Account [ %s ] is locked.", loginname);
             }
-            user = userService.fetchLinks(user, null);
+            user = userService.fetchLinks(user, "unit");
 
             session.setAttribute("uid", user.getId());
             session.setAttribute("uname", user.getUserName());

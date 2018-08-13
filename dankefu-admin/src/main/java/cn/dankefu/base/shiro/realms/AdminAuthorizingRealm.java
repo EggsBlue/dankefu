@@ -68,7 +68,6 @@ public class AdminAuthorizingRealm extends AuthorizingRealm {
             session.setAttribute("uname", user.getUserName());
             session.setAttribute("unitId", user.getUnitId());
 
-
             SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPassword(), getName());
             info.setCredentialsSalt(ByteSource.Util.bytes(user.getSalt()));
             return info;

@@ -13,9 +13,10 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
         height: 100%;
     }
 
-    #tab-1 {
-        border: 1px solid black;
+    #tab-1,#tab-2 {
+        border: 1px solid #cccccc;
         height: 100%;
+        width: 100%;
     }
 
     #left {
@@ -42,7 +43,8 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
         right: 5%;
         display: inline-block;;
         width: 65%;
-        border: 2px solid black;
+        border: 2px solid #cccccc;
+        padding:10px;
     }
 
     .panel-body {
@@ -52,7 +54,10 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
     }
 
     .panel-body, #left, #right {
-        height: 100%;
+        height: 90%;
+    }
+    .panel-body, #left, #right {
+
     }
 
     #left img {
@@ -74,6 +79,14 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
         /*margin: 0;*/
         width: 50%;
     }
+
+    #pwd-box{
+        width: 100%;
+        height: 100%;
+        border:1px solid #cccccc;
+        padding:10px;
+    }
+
 </style>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeIn">
@@ -81,9 +94,11 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
         <div class="col-sm-12" style="height: 100%;">
             <div class="tabs-container" style="height: 100%;">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> 企业信息</a>
+                    <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">企业信息</a>
                     </li>
-                    <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">第二个选项卡</a>
+                    <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">修改密码</a>
+                    </li>
+                    <li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false">角色设置</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -103,16 +118,59 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
 
                             </div>
                             <div id="right">
+                                <el-form status-icon ref="form1" :model="form1" :rules="rules2" label-width="80px">
+                                    <el-form-item label="企业名称" prop="name">
+                                        <el-input v-model="form1.name"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="邮箱"  prop="email" :rules="[
+      { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+      { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+    ]" >
+                                        <el-input v-model="form1.email"></el-input>
+                                    </el-form-item>
 
+                                    <el-form-item label="联系电话" prop="phone">
+                                        <el-input v-model="form1.phone"></el-input>
+                                    </el-form-item>
+
+                                    <el-form-item label="企业介绍" prop="note">
+                                        <el-input type="textarea" v-model="form1.note"></el-input>
+                                    </el-form-item>
+
+                                    <el-form-item>
+                                        <el-button type="primary" @click="onSubmit('form1')">保存</el-button>
+                                    </el-form-item>
+                                </el-form>
                             </div>
                         </div>
                     </div>
                     <div id="tab-2" class="tab-pane">
                         <div class="panel-body">
-                            <strong>移动设备优先</strong>
-                            <p>在 Bootstrap 2 中，我们对框架中的某些关键部分增加了对移动设备友好的样式。而在 Bootstrap 3
-                                中，我们重写了整个框架，使其一开始就是对移动设备友好的。这次不是简单的增加一些可选的针对移动设备的样式，而是直接融合进了框架的内核中。也就是说，Bootstrap
-                                是移动设备优先的。针对移动设备的样式融合进了框架的每个角落，而不是增加一个额外的文件。</p>
+                            <div id="pwd-box">
+                                <el-form status-icon ref="form2" :model="form2" :rules="rules_pwd" label-width="80px">
+                                    <el-form-item label="原密码" prop="oldPwd">
+                                        <el-input type="password"  v-model="form2.oldPwd"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="新密码"  prop="newPwd" >
+                                        <el-input type="password" v-model="form2.newPwd"></el-input>
+                                    </el-form-item>
+
+                                    <el-form-item label="确认密码" prop="conformPwd">
+                                        <el-input type="password" v-model="form2.conformPwd"></el-input>
+                                    </el-form-item>
+
+                                    <el-form-item>
+                                        <el-button type="primary" @click="onSubmit2('form2')">保存</el-button>
+                                    </el-form-item>
+                                </el-form>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                            <div id="role-box">
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -122,8 +180,160 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
 </div>
 </body>
 <script>
-    var uploader = WebUploader.create({
 
+    {
+
+        let app = new Vue({
+            el:'.tab-content',
+            data:function(){
+                var checkName = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请输入公司名'));
+                    } else {
+                        callback();
+                    }
+                };
+                var checkPhone = (rule, value, callback) => {
+                    if (value === '') {
+                        // callback(new Error('请输入手机号'));
+                        callback();
+                    } else if(value.length !=11){
+                        callback(new Error('请输入正确的手机号'));
+                    }else {
+                        callback();
+                    }
+                };
+
+                var checkNote = (rule, value, callback) => {
+                        if (value === '') {
+                            callback();
+                        } else if(value.length >255){
+                            callback(new Error('内容过多'));
+                        }else {
+                            callback();
+                        }
+                };
+
+
+                var oldPwd = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请输入原密码'));
+                    } else {
+                        callback();
+                    }
+                };
+                var newPwd = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请输入新密码'));
+                    } else {
+                        if (this.form2.conformPwd !== '') {
+                            this.$refs.form2.validateField('conformPwd');
+                        }
+                        callback();
+                    }
+                };
+
+                var conformPwd = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请输入确认密码'));
+                    } else {
+                        if(value!=app.form2.newPwd){
+                            callback(new Error('两次密码不一致'));
+                        }
+                        callback();
+                    }
+                };
+
+
+                return {
+                    form1: {
+                        id:'${u.id}',
+                        name: '${u.name!}',
+                        email:'${u.email!}',
+                        phone:'${u.phone!}',
+                        note:'${u.note!}',
+                        logo:'${u.logo!}'
+                    },
+                    rules2: {
+                        name: [
+                            { required: true, message: '请输入企业名称', trigger: 'blur' },
+                            { validator: checkName, trigger: 'blur' }
+                        ],
+                        phone:[
+                            { validator: checkPhone, trigger: 'blur' }
+                        ],
+                        note:[
+                            { validator: checkNote, trigger: 'blur' }
+                        ]
+                    },
+                    form2:{
+                        oldPwd:'',
+                        newPwd:'',
+                        conformPwd:''
+                    },
+                    rules_pwd : {
+                        oldPwd:[
+                            { required: true, message: '请输入原密码', trigger: 'blur' },
+                            { validator: oldPwd, trigger: 'blur' }
+                        ],
+                        newPwd:[
+                            { required: true, message: '请输入新密码', trigger: 'blur' },
+                            { validator: newPwd, trigger: 'blur' }
+                        ],
+                        conformPwd:[
+                            { required: true, message: '请输入确认密码', trigger: 'blur' },
+                            { validator: conformPwd, trigger: 'blur' }
+                        ]
+                    }
+                };
+            },
+            methods:{
+                onSubmit:function(formName){
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            $.post('${base}/compay/save',JSON.stringify(app.form),function(data){
+                                console.log(data);
+                                if(data.code == 0){
+                                    Toast.success("修改密码成功");
+                                }else{
+                                    Toast.error(data.msg);
+                                }
+                            });
+                            // alert('submit!');
+                        } else {
+                            return false;
+                        }
+                    });
+                },
+                onSubmit2:function(formName){
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            $.post('${base}/user/pwd/update',JSON.stringify(app.form2),function(data){
+                                console.log(data);
+                                if(data.code == 0){
+                                    Toast.success("修改成功");
+                                }else{
+                                    Toast.error(data.msg);
+                                }
+                            });
+                            // alert('submit!');
+                        } else {
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+
+
+
+
+
+
+    var uploader = WebUploader.create({
         // swf文件路径
         swf: '${base}/assets/js/plugins/webuploader/Uploader.swf',
 
@@ -144,24 +354,8 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
         // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
         resize: false
     });
-
     // 当有文件添加进来的时候
     uploader.on('fileQueued', function (file) {
-        // var $li = $(
-        //     '<div id="' + file.id + '" class="file-item thumbnail">' +
-        //     '<img>' +
-        //     '<div class="info">' + file.name + '</div>' +
-        //     '</div>'
-        //     ),
-        //     $img = $li.find('img');
-
-        // $('#fileList').html('');
-        // $list为容器jQuery实例
-        // $('#fileList').append($li);
-
-        // 创建缩略图
-        // 如果为非图片文件，可以不用调用此方法。
-        // thumbnailWidth x thumbnailHeight 为 100 x 100
         uploader.makeThumb(file, function (error, src) {
             if (error) {
                 Toast.error("创建预览失败");
@@ -174,7 +368,6 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
         }, 150, 150);
         uploader.upload();
     });
-
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on('uploadSuccess', function (file, response) {
@@ -195,11 +388,6 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
         }
 
         $error.text('上传失败');
-    });
-
-    // 完成上传完了，成功或者失败，先删除进度条。
-    uploader.on('uploadComplete', function (file) {
-        $('#' + file.id).find('.progress').remove();
     });
 
 </script>

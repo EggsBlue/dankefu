@@ -54,7 +54,6 @@ public class UploadController extends Handler {
     @At
     @Ok("json")
     @RequiresAuthentication
-    //AdaptorErrorContext必须是最后一个参数
     public Object image(@Param("file") TempFile tf, HttpServletRequest req, AdaptorErrorContext err) {
         try {
             if (err != null && err.getAdaptorErr() != null) {

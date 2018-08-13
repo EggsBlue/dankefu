@@ -614,10 +614,12 @@
 
         ws.onerror = function () {
             console.log("ws is error");
+            layer.msg("连接服务器失败...");
         }
 
         ws.onclose = function () {
             console.log("ws is close");
+            layer.msg("连接关闭...");
         };
 
         ws.onmessage = function (event) {
