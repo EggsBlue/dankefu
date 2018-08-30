@@ -109,7 +109,7 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
                                     <!--用来存放item-->
                                     <div id="fileList" class="uploader-list">
                                         <div id="WU_FILE_2" class="file-item thumbnail"><img
-                                                src="${base}/assets/img/webuploader.png">
+                                                src="${base}/assets/img/webuploader.png" id="logoImg">
                                             <div class="info"></div>
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
 </body>
 <script>
 
-    {
+
 
         let app = new Vue({
             el:'.tab-content',
@@ -291,7 +291,7 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
                 onSubmit:function(formName){
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            $.post('${base}/compay/save',JSON.stringify(app.form),function(data){
+                            $.post('${base}/compay/save',JSON.stringify(app.form1),function(data){
                                 console.log(data);
                                 if(data.code == 0){
                                     Toast.success("修改密码成功");
@@ -322,15 +322,14 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
                         }
                     });
                 }
+            },
+            created:function(){
+                console.log(this.form1.logo);
+                if(this.form1.logo){
+                    $('#logoImg').attr('src',this.form1.logo);
+                }
             }
         });
-
-    }
-
-
-
-
-
 
 
     var uploader = WebUploader.create({
@@ -371,9 +370,14 @@ layout("/layout/unify.html",{title:unit.name!'蛋客服'}){
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on('uploadSuccess', function (file, response) {
-        Toast.success("上传成功");
+        // Toast.success("上传成功");
         // console.log(file);
         console.log(response);
+        if(response.code == 0){
+            app.form1.logo = response.data.path
+        }else{
+            Toast.error("上传失败");
+        }
         // $( '#'+file.id ).addClass('upload-state-done');
     });
 

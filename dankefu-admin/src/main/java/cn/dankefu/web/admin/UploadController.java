@@ -6,7 +6,9 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.nutz.ioc.impl.PropertiesProxy;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.lang.Files;
 import org.nutz.lang.random.R;
+import org.nutz.lang.util.NutMap;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.*;
@@ -15,6 +17,7 @@ import org.nutz.mvc.upload.TempFile;
 import org.nutz.mvc.upload.UploadAdaptor;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.Date;
 
 @IocBean
@@ -39,9 +42,11 @@ public class UploadController extends Handler {
                 return error("空文件");
             } else {
                 String s = tf.getSubmittedFileName().substring(tf.getSubmittedFileName().indexOf(".") + 1);
-                String uri = "/file/" + DateUtil.format(new Date(), "yyyyMMdd") + "/";
+                String uri = "/images/" + DateUtil.format(new Date(), "yyyyMMdd") + "/";
                 String fileName = R.UU32() + tf.getSubmittedFileName().substring(tf.getSubmittedFileName().indexOf("."));
-                return success("上传成功");
+                String path = conf.get("jetty.staticPathLocal");
+                Files.write(path+uri+fileName,tf.getFile());
+                return success("上传成功").setData(NutMap.NEW().addv("path",uri+fileName));
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -61,9 +66,12 @@ public class UploadController extends Handler {
             } else if (tf == null) {
                 return error("空文件");
             } else {
-                String uri = "/image/" + DateUtil.format(new Date(), "yyyyMMdd") + "/";
+                String uri = "/images/" + DateUtil.format(new Date(), "yyyyMMdd") + "/";
                 String fileName = R.UU32() + tf.getSubmittedFileName().substring(tf.getSubmittedFileName().indexOf("."));
-                return success("上传成功");
+                String path = conf.get("jetty.staticPathLocal");
+//                Files.write(path+uri+fileName,tf.getFile());
+                Files.copy(tf.getFile(),new File(path+uri+fileName));
+                return success("上传成功").setData(NutMap.NEW().addv("path",uri+fileName));
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
